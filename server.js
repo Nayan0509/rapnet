@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -46,9 +46,18 @@ async function getAccessToken() {
     }
 }
 
-// API endpoint to search diamonds
+// Health check endpoint (must be before catch-all)
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        tokenValid: tokenData.access_token && Date.now() < tokenData.expires_at
+    });
+});
+
+// API endpoint to search diamonds (must be before catch-all)
 app.post('/api/diamonds/search', async (req, res) => {
     try {
+        console.log('Received search request:', req.body);
         const token = await getAccessToken();
 
         const searchParams = req.body;
@@ -74,14 +83,6 @@ app.post('/api/diamonds/search', async (req, res) => {
     }
 });
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        tokenValid: tokenData.access_token && Date.now() < tokenData.expires_at
-    });
-});
-
 // Serve index.html for root path
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -92,15 +93,18 @@ app.get('/product.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'product.html'));
 });
 
-// Catch-all route for SPA - serve index.html for any other routes
+// Catch-all route for SPA - serve index.html for any other routes (MUST BE LAST)
 app.get('*', (req, res) => {
-    // Don't catch API routes
-    if (req.path.startsWith('/api/')) {
-        return res.status(404).json({ error: 'API endpoint not found' });
-    }
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    console.log('Environment check:');
+    console.log('- CLIENT_ID:', process.env.CLIENT_ID ? 'Set ✓' : 'Missing ✗');
+    console.log('- CLIENT_SECRET:', process.env.CLIENT_SECRET ? 'Set ✓' : 'Missing ✗');
+    console.log('- PORT:', PORT);
+    console.log('\nAPI Endpoints:');
+    console.log('- POST /api/diamonds/search');
+    console.log('- GET  /api/health');
 });
