@@ -7,6 +7,129 @@ let currentPage = 1;
 let currentSearchParams = null;
 let totalDiamonds = 0;
 
+// Shape selection
+document.querySelectorAll('.shape-item').forEach(item => {
+    item.addEventListener('click', () => {
+        item.classList.toggle('active');
+    });
+});
+
+// Color selection
+document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+    });
+});
+
+// Clarity selection
+document.querySelectorAll('.clarity-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+    });
+});
+
+// Helper functions
+function selectAllShapes() {
+    document.querySelectorAll('.shape-item').forEach(item => {
+        item.classList.add('active');
+    });
+}
+
+function setSizeRange(from, to) {
+    document.getElementById('sizeFrom').value = from;
+    document.getElementById('sizeTo').value = to;
+}
+
+function setFinish(preset) {
+    const finishMap = {
+        '3X': { cut: 'Excellent', polish: 'Excellent', symmetry: 'Excellent' },
+        'EX-': { cut: 'Excellent', polish: 'Very Good', symmetry: 'Very Good' },
+        'VG+': { cut: 'Very Good', polish: 'Excellent', symmetry: 'Excellent' },
+        'VG-': { cut: 'Very Good', polish: 'Good', symmetry: 'Good' }
+    };
+    
+    const finish = finishMap[preset];
+    if (finish) {
+        document.getElementById('cutFrom').value = finish.cut;
+        document.getElementById('cutTo').value = finish.cut;
+        document.getElementById('polishFrom').value = finish.polish;
+        document.getElementById('polishTo').value = finish.polish;
+        document.getElementById('symmetryFrom').value = finish.symmetry;
+        document.getElementById('symmetryTo').value = finish.symmetry;
+    }
+}
+
+// Get selected shapes
+function getSelectedShapes() {
+    const shapes = [];
+    document.querySelectorAll('.shape-item.active').forEach(item => {
+        shapes.push(item.dataset.shape);
+    });
+    return shapes.length > 0 ? shapes : ["Round", "Pear", "Princess", "Marquise", "Oval", "Radiant", "Emerald", "Heart", "Cushion", "Asscher"];
+}
+
+// Get selected colors
+function getSelectedColors() {
+    const colors = [];
+    document.querySelectorAll('.color-btn.active').forEach(btn => {
+        colors.push(btn.dataset.color);
+    });
+    
+    if (colors.length === 0) return { from: 'D', to: 'K' };
+    
+    const colorOrder = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+    const sortedColors = colors.sort((a, b) => colorOrder.indexOf(a) - colorOrder.indexOf(b));
+    
+    return {
+        from: sortedColors[0],
+        to: sortedColors[sortedColors.length - 1]
+    };
+}
+
+// Get selected clarity
+function getSelectedClarity() {
+    const clarities = [];
+    document.querySelectorAll('.clarity-btn.active').forEach(btn => {
+        clarities.push(btn.dataset.clarity);
+    });
+    
+    if (clarities.length === 0) return { from: 'IF', to: 'SI3' };
+    
+    const clarityOrder = ['FL', 'IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'SI3', 'I1', 'I2', 'I3'];
+    const sortedClarities = clarities.sort((a, b) => clarityOrder.indexOf(a) - clarityOrder.indexOf(b));
+    
+    return {
+        from: sortedClarities[0],
+        to: sortedClarities[sortedClarities.length - 1]
+    };
+}
+
+// Get checked values from checkbox group
+function getCheckedValues(containerId) {
+    const values = [];
+    document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`).forEach(cb => {
+        values.push(cb.value);
+    });
+    return values;
+}
+
+// Get labs
+function getSelectedLabs() {
+    const labs = getCheckedValues('labCheckboxes');
+    return labs.length > 0 ? labs : ["GIA", "IGI", "NONE"];
+}
+
+// Get fluorescence
+function getFluorescenceIntensities() {
+    const intensities = getCheckedValues('fluorIntensity');
+    return intensities.length > 0 ? intensities : ["Faint"];
+}
+
+function getFluorescenceColors() {
+    const colors = getCheckedValues('fluorColor');
+    return colors.length > 0 ? colors : ["Blue", "Yellow", "Green", "Red", "Orange", "White"];
+}
+
 searchBtn.addEventListener('click', () => {
     currentPage = 1;
     searchDiamonds();
@@ -19,30 +142,38 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function searchDiamonds(pageNumber = currentPage) {
-    // Hide previous results and errors
     error.style.display = 'none';
     if (pageNumber === 1) {
         results.innerHTML = '';
     }
     loading.style.display = 'block';
 
-    // Gather form data
+    const colors = getSelectedColors();
+    const clarity = getSelectedClarity();
+    
     const searchParams = {
-        search_type: document.getElementById('searchType').value,
-        shapes: ["Round", "Pear", "Princess", "Marquise", "Oval", "Radiant", "Emerald", "Heart", "Cushion", "Asscher"],
-        labs: ["GIA", "IGI", "NONE"],
-        fluorescence_intensities: ["Faint"],
-        fluorescence_colors: ["Blue", "Yellow", "Green", "Red", "Orange", "White"],
+        search_type: "White",
+        shapes: getSelectedShapes(),
+        labs: getSelectedLabs(),
+        fluorescence_intensities: getFluorescenceIntensities(),
+        fluorescence_colors: getFluorescenceColors(),
         size_from: document.getElementById('sizeFrom').value,
         size_to: document.getElementById('sizeTo').value,
-        color_from: document.getElementById('colorFrom').value,
-        color_to: document.getElementById('colorTo').value,
-        clarity_from: document.getElementById('clarityFrom').value,
-        clarity_to: document.getElementById('clarityTo').value,
+        color_from: colors.from,
+        color_to: colors.to,
+        clarity_from: clarity.from,
+        clarity_to: clarity.to,
         price_total_from: document.getElementById('priceFrom').value,
         price_total_to: document.getElementById('priceTo').value,
-        fancy_color_intensity_from: "",
-        fancy_color_intensity_to: "",
+        fancy_color_intensity_from: document.getElementById('fancyIntensityFrom').value || "",
+        fancy_color_intensity_to: document.getElementById('fancyIntensityTo').value || "",
+        cut_from: document.getElementById('cutFrom').value || "",
+        cut_to: document.getElementById('cutTo').value || "",
+        polish_from: document.getElementById('polishFrom').value || "",
+        polish_to: document.getElementById('polishTo').value || "",
+        symmetry_from: document.getElementById('symmetryFrom').value || "",
+        symmetry_to: document.getElementById('symmetryTo').value || "",
+        eye_clean: document.getElementById('eyeClean').value || "",
         sort_by: "Price",
         sort_direction: "Asc",
         page_number: pageNumber.toString(),
@@ -101,24 +232,23 @@ function closeVideoModal() {
     document.body.style.overflow = 'auto';
 }
 
-// Close modal when clicking outside
 window.onclick = function (event) {
-  const modal = document.getElementById("videoModal");
-  if (event.target === modal) {
-    closeVideoModal();
-  }
+    const modal = document.getElementById("videoModal");
+    if (event.target === modal) {
+        closeVideoModal();
+    }
 };
 
 function viewDiamond(diamondId) {
-  const searchResults = sessionStorage.getItem("searchResults");
-  if (searchResults) {
-    const allDiamonds = JSON.parse(searchResults);
-    const diamond = allDiamonds.find((d) => d.diamond_id === diamondId);
-    if (diamond) {
-      sessionStorage.setItem("currentDiamond", JSON.stringify(diamond));
-      window.location.href = `product.html?id=${diamondId}`;
+    const searchResults = sessionStorage.getItem("searchResults");
+    if (searchResults) {
+        const allDiamonds = JSON.parse(searchResults);
+        const diamond = allDiamonds.find((d) => d.diamond_id === diamondId);
+        if (diamond) {
+            sessionStorage.setItem("currentDiamond", JSON.stringify(diamond));
+            window.location.href = `product.html?id=${diamondId}`;
+        }
     }
-  }
 }
 
 function displayResults(data) {
@@ -217,24 +347,19 @@ function displayResults(data) {
 
     html += '</div>';
     
-    // Store search results for product page
     sessionStorage.setItem('searchResults', JSON.stringify(diamonds));
     
-    // Add pagination
     if (totalPages > 1) {
         html += '<div class="pagination">';
         
-        // Previous button
         if (currentPage > 1) {
             html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">← Previous</button>`;
         } else {
             html += `<button class="page-btn disabled" disabled>← Previous</button>`;
         }
         
-        // Page numbers
         html += '<div class="page-numbers">';
         
-        // Always show first page
         if (currentPage > 3) {
             html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
             if (currentPage > 4) {
@@ -242,7 +367,6 @@ function displayResults(data) {
             }
         }
         
-        // Show pages around current page
         const startPage = Math.max(1, currentPage - 2);
         const endPage = Math.min(totalPages, currentPage + 2);
         
@@ -254,7 +378,6 @@ function displayResults(data) {
             }
         }
         
-        // Always show last page
         if (currentPage < totalPages - 2) {
             if (currentPage < totalPages - 3) {
                 html += `<span class="page-ellipsis">...</span>`;
@@ -264,7 +387,6 @@ function displayResults(data) {
         
         html += '</div>';
         
-        // Next button
         if (currentPage < totalPages) {
             html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">Next →</button>`;
         } else {
