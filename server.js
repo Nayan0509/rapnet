@@ -13,75 +13,94 @@ app.use(express.static('public'));
 
 // Token management
 let tokenData = {
-  access_token: null,
-  expires_at: null
+    access_token: null,
+    expires_at: null
 };
 
 // Get access token with auto-refresh
 async function getAccessToken() {
-  const now = Date.now();
-  
-  // Check if token exists and is still valid (refresh 5 minutes before expiry)
-  if (tokenData.access_token && tokenData.expires_at && now < tokenData.expires_at - 300000) {
-    return tokenData.access_token;
-  }
+    const now = Date.now();
 
-  // Fetch new token
-  try {
-    const response = await axios.post('https://authztoken.api.rapaport.com/api/get', {
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET
-    }, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    // Check if token exists and is still valid (refresh 5 minutes before expiry)
+    if (tokenData.access_token && tokenData.expires_at && now < tokenData.expires_at - 300000) {
+        return tokenData.access_token;
+    }
 
-    tokenData.access_token = response.data.access_token;
-    tokenData.expires_at = now + (response.data.expires_in * 1000);
-    
-    console.log('New token obtained, expires in', response.data.expires_in, 'seconds');
-    return tokenData.access_token;
-  } catch (error) {
-    console.error('Error fetching access token:', error.response?.data || error.message);
-    throw new Error('Failed to obtain access token');
-  }
+    // Fetch new token
+    try {
+        const response = await axios.post('https://authztoken.api.rapaport.com/api/get', {
+            client_id: process.env.CLIENT_ID,
+            client_secret: process.env.CLIENT_SECRET
+        }, {
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        tokenData.access_token = response.data.access_token;
+        tokenData.expires_at = now + (response.data.expires_in * 1000);
+
+        console.log('New token obtained, expires in', response.data.expires_in, 'seconds');
+        return tokenData.access_token;
+    } catch (error) {
+        console.error('Error fetching access token:', error.response?.data || error.message);
+        throw new Error('Failed to obtain access token');
+    }
 }
 
 // API endpoint to search diamonds
 app.post('/api/diamonds/search', async (req, res) => {
-  try {
-    const token = await getAccessToken();
-    
-    const searchParams = req.body;
-    
-    const response = await axios.post(
-      'https://technet.rapnetapis.com/instant-inventory/api/Diamonds',
-      { request: { body: searchParams } },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      }
-    );
+    try {
+        const token = await getAccessToken();
 
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error searching diamonds:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({
-      error: 'Failed to search diamonds',
-      details: error.response?.data || error.message
-    });
-  }
+        const searchParams = req.body;
+
+        const response = await axios.post(
+            'https://technet.rapnetapis.com/instant-inventory/api/Diamonds',
+            { request: { body: searchParams } },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error searching diamonds:', error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
+            error: 'Failed to search diamonds',
+            details: error.response?.data || error.message
+        });
+    }
 });
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok',
-    tokenValid: tokenData.access_token && Date.now() < tokenData.expires_at
-  });
+    res.json({
+        status: 'ok',
+        tokenValid: tokenData.access_token && Date.now() < tokenData.expires_at
+    });
+});
+
+// Serve index.html for root path
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Serve product.html for product page
+app.get('/product.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'product.html'));
+});
+
+// Catch-all route for SPA - serve index.html for any other routes
+app.get('*', (req, res) => {
+    // Don't catch API routes
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
