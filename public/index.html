@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulique Diamond</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💎 Soulique Diamond</h1>
+            <p>Search diamonds</p>
+        </header>
+
+        <div class="search-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Search Type</label>
+                    <select id="searchType">
+                        <option value="White">White</option>
+                        <option value="Fancy">Fancy</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Size From (ct)</label>
+                    <input type="number" id="sizeFrom" value="0.2" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Size To (ct)</label>
+                    <input type="number" id="sizeTo" value="0.5" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Color From</label>
+                    <select id="colorFrom">
+                        <option value="D" selected>D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Color To</label>
+                    <select id="colorTo">
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K" selected>K</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Clarity From</label>
+                    <select id="clarityFrom">
+                        <option value="IF" selected>IF</option>
+                        <option value="VVS1">VVS1</option>
+                        <option value="VVS2">VVS2</option>
+                        <option value="VS1">VS1</option>
+                        <option value="VS2">VS2</option>
+                        <option value="SI1">SI1</option>
+                        <option value="SI2">SI2</option>
+                        <option value="SI3">SI3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Clarity To</label>
+                    <select id="clarityTo">
+                        <option value="IF">IF</option>
+                        <option value="VVS1">VVS1</option>
+                        <option value="VVS2">VVS2</option>
+                        <option value="VS1">VS1</option>
+                        <option value="VS2">VS2</option>
+                        <option value="SI1">SI1</option>
+                        <option value="SI2">SI2</option>
+                        <option value="SI3" selected>SI3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Price From ($)</label>
+                    <input type="number" id="priceFrom" value="100" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Price To ($)</label>
+                    <input type="number" id="priceTo" value="1000000" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Page Size</label>
+                    <input type="number" id="pageSize" value="20" min="1" max="100">
+                </div>
+            </div>
+
+            <button id="searchBtn" class="search-btn">Search Diamonds</button>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Searching diamonds...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="results" class="results"></div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-modal-content">
+            <div class="video-modal-header">
+                <h3 id="videoTitle">360° Diamond View</h3>
+                <button class="video-modal-close" onclick="closeVideoModal()">&times;</button>
+            </div>
+            <div class="video-modal-body">
+                <iframe id="videoIframe" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Details - Rapaport</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="product-styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="back-link">← Back to Search</a>
+                <h1>💎 Diamond Details</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="loading" class="loading" style="display: block;">
+            <div class="spinner"></div>
+            <p>Loading diamond details...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="productDetail" class="product-detail" style="display: none;"></div>
+
+        <div id="relatedProducts" class="related-section" style="display: none;">
+            <h2>Related Diamonds</h2>
+            <div id="relatedGrid" class="diamond-grid"></div>
+        </div>
+    </div>
+
+    <script src="product.js"></script>
+</body>
+</html>
