@@ -54,13 +54,30 @@ function displayDiamondDetails(diamond) {
                 <div class="product-main-image">
                     ${hasImage ? `
                         <img src="${diamond.image_file}" alt="${diamondName}" />
+                    ` : hasVideo ? `
+                        <div class="video-preview" onclick="openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
+                            <div class="video-play-overlay">
+                                <svg class="play-icon" viewBox="0 0 24 24" fill="white">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <span>Click to Play 360° Video</span>
+                            </div>
+                        </div>
                     ` : `
-                        <div class="product-image-placeholder">No Image Available</div>
+                        <div class="product-image-placeholder">
+                            <svg class="diamond-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                            <span>No Image Available</span>
+                        </div>
                     `}
                 </div>
                 ${hasVideo ? `
                     <button class="product-video-btn" onclick="openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
-                        📹 Watch 360° Video
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Watch 360° Video
                     </button>
                 ` : ''}
             </div>
@@ -280,10 +297,20 @@ function viewDiamond(diamondId) {
 }
 
 function openVideoModal(videoUrl, diamondName) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('videoModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
     const modal = document.createElement('div');
     modal.id = 'videoModal';
     modal.className = 'video-modal';
     modal.style.display = 'flex';
+    
+    // Check if it's a video file or iframe URL
+    const isVideoFile = videoUrl.match(/\.(mp4|webm|ogg)$/i);
+    
     modal.innerHTML = `
         <div class="video-modal-content">
             <div class="video-modal-header">
@@ -291,12 +318,26 @@ function openVideoModal(videoUrl, diamondName) {
                 <button class="video-modal-close" onclick="closeVideoModal()">&times;</button>
             </div>
             <div class="video-modal-body">
-                <iframe src="${videoUrl}" frameborder="0" allowfullscreen></iframe>
+                ${isVideoFile ? `
+                    <video controls autoplay>
+                        <source src="${videoUrl}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                ` : `
+                    <iframe src="${videoUrl}" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+                `}
             </div>
         </div>
     `;
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
+    
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeVideoModal();
+        }
+    });
 }
 
 function closeVideoModal() {

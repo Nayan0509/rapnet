@@ -213,23 +213,57 @@ function goToPage(page) {
 }
 
 function openVideoModal(videoUrl, diamondName) {
-    const modal = document.getElementById('videoModal');
-    const iframe = document.getElementById('videoIframe');
-    const title = document.getElementById('videoTitle');
+    // Remove existing modal if any
+    let modal = document.getElementById('videoModal');
+    if (modal) {
+        modal.remove();
+    }
     
-    title.textContent = diamondName;
-    iframe.src = videoUrl;
+    // Create new modal
+    modal = document.createElement('div');
+    modal.id = 'videoModal';
+    modal.className = 'video-modal';
     modal.style.display = 'flex';
+    
+    // Check if it's a video file or iframe URL
+    const isVideoFile = videoUrl.match(/\.(mp4|webm|ogg)$/i);
+    
+    modal.innerHTML = `
+        <div class="video-modal-content">
+            <div class="video-modal-header">
+                <h3>${diamondName}</h3>
+                <button class="video-modal-close" onclick="closeVideoModal()">&times;</button>
+            </div>
+            <div class="video-modal-body">
+                ${isVideoFile ? `
+                    <video controls autoplay>
+                        <source src="${videoUrl}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                ` : `
+                    <iframe src="${videoUrl}" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+                `}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
+    
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeVideoModal();
+        }
+    });
 }
 
 function closeVideoModal() {
     const modal = document.getElementById('videoModal');
-    const iframe = document.getElementById('videoIframe');
-    
-    iframe.src = '';
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = 'auto';
+    }
 }
 
 window.onclick = function (event) {
@@ -286,7 +320,23 @@ function displayResults(data) {
                     <div class="diamond-image">
                         ${diamond.lab ? `<span class="cert-badge">${diamond.lab}</span>` : ''}
                         <img src="${diamond.image_file}" alt="${diamondName}" loading="lazy" />
-                        ${hasVideo ? '<span class="video-badge">📹 360° View</span>' : ''}
+                        ${hasVideo ? `
+                            <div class="video-play-icon" onclick="event.stopPropagation(); openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
+                                <svg viewBox="0 0 24 24" fill="white">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : hasVideo ? `
+                    <div class="diamond-image diamond-video-preview" onclick="event.stopPropagation(); openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
+                        ${diamond.lab ? `<span class="cert-badge">${diamond.lab}</span>` : ''}
+                        <div class="video-play-icon-large">
+                            <svg viewBox="0 0 24 24" fill="white">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        <span class="video-text">Click to Play Video</span>
                     </div>
                 ` : '<div class="diamond-image-placeholder">No Image Available</div>'}
                 
