@@ -65,6 +65,7 @@ function getSelectedShapes() {
     document.querySelectorAll('.shape-item.active').forEach(item => {
         shapes.push(item.dataset.shape);
     });
+    // Return all shapes if none selected
     return shapes.length > 0 ? shapes : ["Round", "Pear", "Princess", "Marquise", "Oval", "Radiant", "Emerald", "Heart", "Cushion", "Asscher"];
 }
 
@@ -75,7 +76,8 @@ function getSelectedColors() {
         colors.push(btn.dataset.color);
     });
     
-    if (colors.length === 0) return { from: 'D', to: 'K' };
+    // Return all colors if none selected
+    if (colors.length === 0) return { from: 'D', to: 'Z' };
     
     const colorOrder = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
     const sortedColors = colors.sort((a, b) => colorOrder.indexOf(a) - colorOrder.indexOf(b));
@@ -93,7 +95,8 @@ function getSelectedClarity() {
         clarities.push(btn.dataset.clarity);
     });
     
-    if (clarities.length === 0) return { from: 'IF', to: 'SI3' };
+    // Return all clarities if none selected
+    if (clarities.length === 0) return { from: 'FL', to: 'I3' };
     
     const clarityOrder = ['FL', 'IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'SI3', 'I1', 'I2', 'I3'];
     const sortedClarities = clarities.sort((a, b) => clarityOrder.indexOf(a) - clarityOrder.indexOf(b));
@@ -116,17 +119,20 @@ function getCheckedValues(containerId) {
 // Get labs
 function getSelectedLabs() {
     const labs = getCheckedValues('labCheckboxes');
-    return labs.length > 0 ? labs : ["GIA", "IGI", "NONE"];
+    // Return all labs if none selected
+    return labs.length > 0 ? labs : ["GIA", "IGI", "HRD", "AGS", "GCAL", "NONE"];
 }
 
 // Get fluorescence
 function getFluorescenceIntensities() {
     const intensities = getCheckedValues('fluorIntensity');
-    return intensities.length > 0 ? intensities : ["Faint"];
+    // Return all intensities if none selected
+    return intensities.length > 0 ? intensities : ["None", "Faint", "Very Slight", "Slight", "Medium", "Strong", "Very Strong"];
 }
 
 function getFluorescenceColors() {
     const colors = getCheckedValues('fluorColor');
+    // Return all colors if none selected
     return colors.length > 0 ? colors : ["Blue", "Yellow", "Green", "Red", "Orange", "White"];
 }
 
@@ -150,6 +156,10 @@ async function searchDiamonds(pageNumber = currentPage) {
 
     const colors = getSelectedColors();
     const clarity = getSelectedClarity();
+    const sizeFrom = document.getElementById('sizeFrom').value;
+    const sizeTo = document.getElementById('sizeTo').value;
+    const priceFrom = document.getElementById('priceFrom').value;
+    const priceTo = document.getElementById('priceTo').value;
     
     const searchParams = {
         search_type: "White",
@@ -157,14 +167,14 @@ async function searchDiamonds(pageNumber = currentPage) {
         labs: getSelectedLabs(),
         fluorescence_intensities: getFluorescenceIntensities(),
         fluorescence_colors: getFluorescenceColors(),
-        size_from: document.getElementById('sizeFrom').value,
-        size_to: document.getElementById('sizeTo').value,
+        size_from: sizeFrom || "0.01",
+        size_to: sizeTo || "99",
         color_from: colors.from,
         color_to: colors.to,
         clarity_from: clarity.from,
         clarity_to: clarity.to,
-        price_total_from: document.getElementById('priceFrom').value,
-        price_total_to: document.getElementById('priceTo').value,
+        price_total_from: priceFrom || "1",
+        price_total_to: priceTo || "99999999",
         fancy_color_intensity_from: document.getElementById('fancyIntensityFrom').value || "",
         fancy_color_intensity_to: document.getElementById('fancyIntensityTo').value || "",
         cut_from: document.getElementById('cutFrom').value || "",
