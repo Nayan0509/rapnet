@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soulique Diamond - Search Diamonds</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -125,13 +128,6 @@
                             <button class="clarity-btn" data-clarity="I2">I2</button>
                             <button class="clarity-btn" data-clarity="I3">I3</button>
                         </div>
-                        <div class="clarity-extra">
-                            <div class="eye-clean-group">
-                                <label>Eye Clean</label>
-                                <select id="eyeClean"><option value="">Select...</option><option>Yes</option><option>Borderline</option><option>No</option></select>
-                            </div>
-                            <button class="no-bgm">No BGM</button>
-                        </div>
                     </div>
                 </div>
 
@@ -213,25 +209,7 @@
                                 <label><input type="checkbox" value="GCAL"> GCAL</label>
                                 <label><input type="checkbox" value="NONE"> NONE</label>
                             </div>
-                            <div class="price-inputs">
-                                <div class="price-group">
-                                    <label>Price From ($)</label>
-                                    <input type="number" id="priceFrom" value="">
-                                </div>
-                                <div class="price-group">
-                                    <label>Price To ($)</label>
-                                    <input type="number" id="priceTo" value="">
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Results Per Page -->
-                <div class="filter-row">
-                    <label class="filter-label">Results Per Page</label>
-                    <div class="filter-content">
-                        <input type="number" id="pageSize" value="20" min="1" max="100" style="width: 100px;">
                     </div>
                 </div>
 

@@ -49,181 +49,206 @@ function displayDiamondDetails(diamond) {
     const diamondName = `${diamond.lab || ''} ${diamond.size || 'N/A'} Carat ${diamond.color || ''}-${diamond.clarity || ''} ${diamond.cut || ''} Cut ${diamond.shape || ''} Diamond`.trim();
     
     let html = `
-        <div class="product-layout">
-            <div class="product-gallery">
-                <div class="product-main-image">
-                    ${hasImage ? `
-                        <img src="${diamond.image_file}" alt="${diamondName}" />
-                    ` : hasVideo ? `
-                        <div class="video-preview" onclick="openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
-                            <div class="video-play-overlay">
-                                <svg class="play-icon" viewBox="0 0 24 24" fill="white">
-                                    <path d="M8 5v14l11-7z"/>
+        <div class="page-width">
+            <div class="product product--medium product--left product--thumbnail_slider product--mobile-show grid grid--1-col grid--2-col-tablet">
+                <div class="grid__item product__media-wrapper">
+                    <div class="product-media-container media-type-image media-fit-cover global-media-settings gradient constrain-height">
+                        ${hasImage ? `
+                            <div class="product__media media media--transparent">
+                                <img src="${diamond.image_file}" alt="${diamondName}" />
+                            </div>
+                        ` : hasVideo ? `
+                            <div class="video-preview" onclick="openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
+                                <div class="video-play-overlay">
+                                    <svg class="play-icon" viewBox="0 0 24 24" fill="white">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                    <span>Click to Play 360° Video</span>
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="product-image-placeholder">
+                                <svg class="diamond-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                                 </svg>
-                                <span>Click to Play 360° Video</span>
+                                <span>No Image Available</span>
+                            </div>
+                        `}
+                    </div>
+                    
+                    ${hasImage ? `
+                    <div class="product-thumbnails">
+                        <div class="thumbnail-item">
+                            <img src="${diamond.image_file}" alt="${diamondName}" />
+                        </div>
+                        ${hasVideo ? `
+                        <div class="thumbnail-item thumbnail-video" onclick="openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+                    
+                    ${hasVideo && !hasImage ? `
+                        <button class="product-video-btn" onclick="openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            Watch 360° Video
+                        </button>
+                    ` : ''}
+                </div>
+                
+                <div class="product__info-wrapper grid__item scroll-trigger animate--slide-in">
+                    <section id="ProductInfo-main" class="product__info-container">
+                        <p class="product__text inline-richtext caption-with-letter-spacing">
+                            ${diamond.lab ? diamond.lab + ' Certified Diamond' : 'Diamond'}
+                        </p>
+                        
+                        <div class="product__title">
+                            <h1>${diamondName}</h1>
+                        </div>
+                        
+                        ${diamond.stock_num ? `
+                        <p class="product__sku" role="status">
+                            SKU: ${diamond.stock_num}
+                        </p>
+                        ` : ''}
+                        
+                        <div id="price-main" role="status">
+                            <div class="price price--large">
+                                <div class="price__container">
+                                    <div class="price__regular">
+                                        <span class="price-item price-item--regular">
+                                            Rs. ${diamond.total_sales_price_in_currency?.toLocaleString() || diamond.total_sales_price?.toLocaleString() || '199.99'}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    ` : `
-                        <div class="product-image-placeholder">
-                            <svg class="diamond-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                            </svg>
-                            <span>No Image Available</span>
+                        
+                        <div class="product-form">
+                            <div class="product-form__buttons">
+                                <button type="button" class="product-form__submit button button--full-width button--primary">
+                                    <span>Add to Cart</span>
+                                </button>
+                            </div>
                         </div>
-                    `}
+                        
+                        <div class="meta-details">
+                            ${diamond.color ? `
+                            <div class="meta-detail meta-clarity">
+                                <div class="meta-detail-value">${diamond.color}</div>
+                                <div class="meta-detail-lable">Colour</div>
+                            </div>
+                            ` : ''}
+                            
+                            ${diamond.clarity ? `
+                            <div class="meta-detail meta-clarity">
+                                <div class="meta-detail-value">${diamond.clarity}</div>
+                                <div class="meta-detail-lable">Clarity</div>
+                            </div>
+                            ` : ''}
+                            
+                            ${diamond.cut ? `
+                            <div class="meta-detail meta-cut">
+                                <div class="meta-detail-value">${diamond.cut}</div>
+                                <div class="meta-detail-lable">Cut</div>
+                            </div>
+                            ` : ''}
+                            
+                            ${diamond.size ? `
+                            <div class="meta-detail meta-carat">
+                                <div class="meta-detail-value">${diamond.size}</div>
+                                <div class="meta-detail-lable">Carat</div>
+                            </div>
+                            ` : ''}
+                            
+                            ${diamond.cert_num ? `
+                            <div class="meta-detail meta-carat">
+                                <div class="meta-detail-value">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" viewBox="0 0 33 32" fill="none">
+                                        <path d="M16.5003 20.7694L11.7817 16.052L12.7257 15.092L15.8337 18.2V6.66669H17.167V18.2L20.2737 15.0934L21.219 16.052L16.5003 20.7694ZM7.16699 25.3334V19.9494H8.50033V24H24.5003V19.9494H25.8337V25.3334H7.16699Z" fill="#2E2E2E" stroke="#2E2E2E" stroke-width="0.5"/>
+                                    </svg>
+                                </div>
+                                <div class="meta-detail-lable">Certificate</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${diamond.shape || diamond.polish || diamond.symmetry || diamond.fluor_intensity ? `
+                        <div class="product-specs-section">
+                            <h3>Specifications</h3>
+                            <div class="product-specs-grid">
+                                ${diamond.shape ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Shape</span>
+                                    <span class="spec-value">${diamond.shape}</span>
+                                </div>
+                                ` : ''}
+                                ${diamond.polish ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Polish</span>
+                                    <span class="spec-value">${diamond.polish}</span>
+                                </div>
+                                ` : ''}
+                                ${diamond.symmetry ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Symmetry</span>
+                                    <span class="spec-value">${diamond.symmetry}</span>
+                                </div>
+                                ` : ''}
+                                ${diamond.fluor_intensity ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Fluorescence</span>
+                                    <span class="spec-value">${diamond.fluor_intensity}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        ${diamond.meas_length || diamond.meas_width || diamond.meas_depth ? `
+                        <div class="product-measurements">
+                            <h3>Measurements</h3>
+                            <div class="measurement-grid">
+                                ${diamond.meas_length ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Length</span>
+                                    <span class="spec-value">${diamond.meas_length} mm</span>
+                                </div>
+                                ` : ''}
+                                ${diamond.meas_width ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Width</span>
+                                    <span class="spec-value">${diamond.meas_width} mm</span>
+                                </div>
+                                ` : ''}
+                                ${diamond.meas_depth ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Depth</span>
+                                    <span class="spec-value">${diamond.meas_depth} mm</span>
+                                </div>
+                                ` : ''}
+                                ${diamond.depth_percent ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Depth %</span>
+                                    <span class="spec-value">${diamond.depth_percent}%</span>
+                                </div>
+                                ` : ''}
+                                ${diamond.table_percent ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Table %</span>
+                                    <span class="spec-value">${diamond.table_percent}%</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </section>
                 </div>
-                ${hasVideo ? `
-                    <button class="product-video-btn" onclick="openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M8 5v14l11-7z"/>
-                        </svg>
-                        Watch 360° Video
-                    </button>
-                ` : ''}
-            </div>
-            
-            <div class="product-info">
-                <div class="product-badges">
-                    ${diamond.lab ? `<span class="badge badge-cert">${diamond.lab} Certified</span>` : ''}
-                    ${diamond.eye_clean === 'Yes' ? `<span class="badge badge-eye-clean">Eye Clean</span>` : ''}
-                </div>
-                
-                <h1 class="product-title">${diamondName}</h1>
-                <p class="product-stock">Stock #: ${diamond.stock_num || 'N/A'} | Certificate #: ${diamond.cert_num || 'N/A'}</p>
-                
-                <div class="product-price">
-                    ${diamond.currency_symbol || '$'}${diamond.total_sales_price_in_currency?.toLocaleString() || diamond.total_sales_price?.toLocaleString() || 'N/A'}
-                </div>
-                ${diamond.currency_code && diamond.currency_code !== 'USD' ? `
-                    <div class="product-price-usd">
-                        Approximately $${diamond.total_sales_price?.toLocaleString()} USD
-                    </div>
-                ` : ''}
-                
-                <div class="product-specs-grid">
-                    <div class="spec-item">
-                        <span class="spec-label">Shape</span>
-                        <span class="spec-value">${diamond.shape || 'N/A'}</span>
-                    </div>
-                    <div class="spec-item">
-                        <span class="spec-label">Carat Weight</span>
-                        <span class="spec-value">${diamond.size || 'N/A'} ct</span>
-                    </div>
-                    <div class="spec-item">
-                        <span class="spec-label">Color</span>
-                        <span class="spec-value">${diamond.color || 'N/A'}</span>
-                    </div>
-                    <div class="spec-item">
-                        <span class="spec-label">Clarity</span>
-                        <span class="spec-value">${diamond.clarity || 'N/A'}</span>
-                    </div>
-                    ${diamond.cut ? `
-                    <div class="spec-item">
-                        <span class="spec-label">Cut Grade</span>
-                        <span class="spec-value">${diamond.cut}</span>
-                    </div>
-                    ` : ''}
-                    ${diamond.polish ? `
-                    <div class="spec-item">
-                        <span class="spec-label">Polish</span>
-                        <span class="spec-value">${diamond.polish}</span>
-                    </div>
-                    ` : ''}
-                    ${diamond.symmetry ? `
-                    <div class="spec-item">
-                        <span class="spec-label">Symmetry</span>
-                        <span class="spec-value">${diamond.symmetry}</span>
-                    </div>
-                    ` : ''}
-                    ${diamond.fluor_intensity ? `
-                    <div class="spec-item">
-                        <span class="spec-label">Fluorescence</span>
-                        <span class="spec-value">${diamond.fluor_intensity}</span>
-                    </div>
-                    ` : ''}
-                </div>
-                
-                ${diamond.meas_length || diamond.meas_width || diamond.meas_depth ? `
-                <div class="product-measurements">
-                    <h3>📏 Measurements</h3>
-                    <div class="measurement-grid">
-                        ${diamond.meas_length ? `
-                        <div class="spec-item">
-                            <span class="spec-label">Length</span>
-                            <span class="spec-value">${diamond.meas_length} mm</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.meas_width ? `
-                        <div class="spec-item">
-                            <span class="spec-label">Width</span>
-                            <span class="spec-value">${diamond.meas_width} mm</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.meas_depth ? `
-                        <div class="spec-item">
-                            <span class="spec-label">Depth</span>
-                            <span class="spec-value">${diamond.meas_depth} mm</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.depth_percent ? `
-                        <div class="spec-item">
-                            <span class="spec-label">Depth %</span>
-                            <span class="spec-value">${diamond.depth_percent}%</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.table_percent ? `
-                        <div class="spec-item">
-                            <span class="spec-label">Table %</span>
-                            <span class="spec-value">${diamond.table_percent}%</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.ratio ? `
-                        <div class="spec-item">
-                            <span class="spec-label">Ratio</span>
-                            <span class="spec-value">${diamond.ratio}</span>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-                ` : ''}
-                
-                ${diamond.girdle_min || diamond.culet_size || diamond.shade || diamond.milky ? `
-                <div class="product-additional">
-                    <h3>ℹ️ Additional Information</h3>
-                    <div class="additional-grid">
-                        ${diamond.girdle_min ? `
-                        <div class="additional-item">
-                            <span class="label">Girdle:</span>
-                            <span class="value">${diamond.girdle_min}${diamond.girdle_max ? ' - ' + diamond.girdle_max : ''}</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.culet_size ? `
-                        <div class="additional-item">
-                            <span class="label">Culet:</span>
-                            <span class="value">${diamond.culet_size}</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.shade && diamond.shade !== 'Unknown' ? `
-                        <div class="additional-item">
-                            <span class="label">Shade:</span>
-                            <span class="value">${diamond.shade}</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.milky && diamond.milky !== 'Unknown' ? `
-                        <div class="additional-item">
-                            <span class="label">Milky:</span>
-                            <span class="value">${diamond.milky}</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.rough_source ? `
-                        <div class="additional-item">
-                            <span class="label">Origin:</span>
-                            <span class="value">${diamond.rough_source}</span>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-                ` : ''}
             </div>
         </div>
     `;
@@ -244,36 +269,21 @@ function displayRelatedDiamonds(currentDiamond, allDiamonds) {
     let html = '';
     related.forEach(diamond => {
         const hasImage = diamond.has_image_file && diamond.image_file;
-        const hasVideo = diamond.has_video && diamond.video_url;
         const diamondName = `${diamond.lab || ''} ${diamond.size || 'N/A'} Carat ${diamond.color || ''}-${diamond.clarity || ''} ${diamond.cut || ''} Cut ${diamond.shape || ''} Diamond`.trim();
         
         html += `
             <div class="diamond-card" onclick="viewDiamond(${diamond.diamond_id})" style="cursor: pointer;">
                 ${hasImage ? `
                     <div class="diamond-image">
-                        ${diamond.lab ? `<span class="cert-badge">${diamond.lab}</span>` : ''}
+                        ${diamond.size ? `<span class="cert-badge">${diamond.size}</span>` : ''}
                         <img src="${diamond.image_file}" alt="${diamondName}" loading="lazy" />
-                        ${hasVideo ? '<span class="video-badge">📹 360° View</span>' : ''}
                     </div>
                 ` : '<div class="diamond-image-placeholder">No Image Available</div>'}
                 
                 <div class="diamond-info">
                     <h3>${diamondName}</h3>
-                    
                     <div class="diamond-price">
-                        ${diamond.currency_symbol || '$'}${diamond.total_sales_price_in_currency?.toLocaleString() || diamond.total_sales_price?.toLocaleString() || 'N/A'}
-                        ${diamond.currency_code && diamond.currency_code !== 'USD' ? `<span class="price-usd">($${diamond.total_sales_price?.toLocaleString()})</span>` : ''}
-                    </div>
-                    
-                    <div class="diamond-specs">
-                        <div class="spec-row">
-                            <span class="label">Color:</span>
-                            <span class="value">${diamond.color || 'N/A'}</span>
-                        </div>
-                        <div class="spec-row">
-                            <span class="label">Clarity:</span>
-                            <span class="value">${diamond.clarity || 'N/A'}</span>
-                        </div>
+                        Rs. ${diamond.total_sales_price_in_currency?.toLocaleString() || diamond.total_sales_price?.toLocaleString() || '199.99'}
                     </div>
                 </div>
             </div>

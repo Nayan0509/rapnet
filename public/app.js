@@ -158,8 +158,6 @@ async function searchDiamonds(pageNumber = currentPage) {
     const clarity = getSelectedClarity();
     const sizeFrom = document.getElementById('sizeFrom').value;
     const sizeTo = document.getElementById('sizeTo').value;
-    const priceFrom = document.getElementById('priceFrom').value;
-    const priceTo = document.getElementById('priceTo').value;
     
     const searchParams = {
         search_type: "White",
@@ -173,8 +171,8 @@ async function searchDiamonds(pageNumber = currentPage) {
         color_to: colors.to,
         clarity_from: clarity.from,
         clarity_to: clarity.to,
-        price_total_from: priceFrom || "1",
-        price_total_to: priceTo || "99999999",
+        price_total_from: "1",
+        price_total_to: "99999999",
         fancy_color_intensity_from: document.getElementById('fancyIntensityFrom').value || "",
         fancy_color_intensity_to: document.getElementById('fancyIntensityTo').value || "",
         cut_from: document.getElementById('cutFrom').value || "",
@@ -183,11 +181,10 @@ async function searchDiamonds(pageNumber = currentPage) {
         polish_to: document.getElementById('polishTo').value || "",
         symmetry_from: document.getElementById('symmetryFrom').value || "",
         symmetry_to: document.getElementById('symmetryTo').value || "",
-        eye_clean: document.getElementById('eyeClean').value || "",
         sort_by: "Price",
         sort_direction: "Asc",
         page_number: pageNumber.toString(),
-        page_size: document.getElementById('pageSize').value
+        page_size: "20"
     };
 
     currentSearchParams = searchParams;
@@ -328,7 +325,7 @@ function displayResults(data) {
             <div class="diamond-card" onclick="viewDiamond(${diamond.diamond_id})" style="cursor: pointer;">
                 ${hasImage ? `
                     <div class="diamond-image">
-                        ${diamond.lab ? `<span class="cert-badge">${diamond.lab}</span>` : ''}
+                        ${diamond.size ? `<span class="cert-badge">${diamond.size}</span>` : ''}
                         <img src="${diamond.image_file}" alt="${diamondName}" loading="lazy" />
                         ${hasVideo ? `
                             <div class="video-play-icon" onclick="event.stopPropagation(); openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
@@ -340,7 +337,7 @@ function displayResults(data) {
                     </div>
                 ` : hasVideo ? `
                     <div class="diamond-image diamond-video-preview" onclick="event.stopPropagation(); openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
-                        ${diamond.lab ? `<span class="cert-badge">${diamond.lab}</span>` : ''}
+                        ${diamond.size ? `<span class="cert-badge">${diamond.size}</span>` : ''}
                         <div class="video-play-icon-large">
                             <svg viewBox="0 0 24 24" fill="white">
                                 <path d="M8 5v14l11-7z"/>
@@ -354,52 +351,10 @@ function displayResults(data) {
                     <h3>${diamondName}</h3>
                     
                     <div class="diamond-price">
-                        ${diamond.currency_symbol || '$'}${diamond.total_sales_price_in_currency?.toLocaleString() || diamond.total_sales_price?.toLocaleString() || 'N/A'}
-                        ${diamond.currency_code && diamond.currency_code !== 'USD' ? `<span class="price-usd">($${diamond.total_sales_price?.toLocaleString()})</span>` : ''}
+                        Rs. ${diamond.total_sales_price_in_currency?.toLocaleString() || diamond.total_sales_price?.toLocaleString() || '199.99'}
                     </div>
                     
-                    <div class="diamond-specs">
-                        <div class="spec-row">
-                            <span class="label">Color:</span>
-                            <span class="value">${diamond.color || 'N/A'}</span>
-                        </div>
-                        <div class="spec-row">
-                            <span class="label">Clarity:</span>
-                            <span class="value">${diamond.clarity || 'N/A'}</span>
-                        </div>
-                        ${diamond.cut ? `
-                        <div class="spec-row">
-                            <span class="label">Cut:</span>
-                            <span class="value">${diamond.cut}</span>
-                        </div>
-                        ` : ''}
-                        <div class="spec-row">
-                            <span class="label">Lab:</span>
-                            <span class="value">${diamond.lab || 'N/A'}</span>
-                        </div>
-                        <div class="spec-row">
-                            <span class="label">Cert #:</span>
-                            <span class="value cert-num">${diamond.cert_num || 'N/A'}</span>
-                        </div>
-                        ${diamond.fluor_intensity ? `
-                        <div class="spec-row">
-                            <span class="label">Fluor:</span>
-                            <span class="value">${diamond.fluor_intensity}</span>
-                        </div>
-                        ` : ''}
-                        ${diamond.eye_clean ? `
-                        <div class="spec-row">
-                            <span class="label">Eye Clean:</span>
-                            <span class="value">${diamond.eye_clean}</span>
-                        </div>
-                        ` : ''}
-                    </div>
-                    
-                    ${hasVideo ? `
-                    <button class="video-link" onclick="event.stopPropagation(); openVideoModal('${diamond.video_url}', '${diamondName.replace(/'/g, "\\'")}')">
-                        View 360° Video
-                    </button>
-                    ` : ''}
+
                 </div>
             </div>
         `;

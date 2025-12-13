@@ -5,45 +5,40 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f5f5f5;
-    color: #333;
-    font-size: 13px;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    font-size: 14px;
     overflow-x: hidden;
+    line-height: 1.6;
+    font-weight: 400;
+    padding-top: 2rem;
 }
 
+/* Hide header section */
 header {
-    background: linear-gradient(135deg, #2563eb 0%, #05205f 100%);
-    color: white;
-    padding: 1.5rem 1rem;
-    text-align: center;
-}
-
-header h1 {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
-}
-
-header p {
-    font-size: 0.9rem;
-    opacity: 0.9;
+    display: none !important;
 }
 
 main {
     max-width: 1400px;
-    margin: 1rem auto;
-    padding: 0 1rem;
+    margin: 0 auto;
+    padding: 2rem 2rem;
 }
 
 .search-container {
-    background: white;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    overflow: hidden;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
 }
 
 .search-form {
-    padding: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    margin-bottom: 2.5rem;
 }
 
 /* Filter Rows */
@@ -502,22 +497,25 @@ main {
 
 /* Results */
 .results {
-    padding: 1rem;
+    padding: 0;
 }
 
 .results-header {
     margin-bottom: 1.5rem;
+    padding: 0;
 }
 
 .results-header h2 {
-    font-size: 1.3rem;
-    color: #1f2937;
-    margin-bottom: 0.3rem;
+    font-size: 1.25rem;
+    color: #2c2c2c;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
 }
 
 .results-info {
-    color: #6b7280;
-    font-size: 12px;
+    color: #757575;
+    font-size: 0.8125rem;
+    font-weight: 400;
 }
 
 .no-results {
@@ -529,61 +527,73 @@ main {
 /* Diamond Grid */
 .diamond-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem 1.75rem;
+    margin-bottom: 2rem;
 }
 
 .diamond-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    overflow: hidden;
-    transition: all 0.2s;
+    background: #ffffff;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    transition: transform 0.3s ease;
+    box-shadow: none;
+    text-align: center;
 }
 
 .diamond-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: none;
     transform: translateY(-2px);
 }
 
 .diamond-image {
     position: relative;
     width: 100%;
-    height: 180px;
-    background: #f9fafb;
+    aspect-ratio: 1;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 1rem;
 }
 
 .diamond-image img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 }
 
 .diamond-image-placeholder {
     width: 100%;
-    height: 180px;
-    background: #f3f4f6;
+    aspect-ratio: 1;
+    background: #f5f5f5;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #9ca3af;
+    color: #999;
     font-size: 12px;
+    border-radius: 0;
 }
 
 .cert-badge {
     position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
-    background: #2563eb;
-    color: white;
-    padding: 0.2rem 0.5rem;
-    border-radius: 3px;
-    font-size: 10px;
-    font-weight: 600;
+    top: 8px;
+    left: 8px;
+    background: #ffffff;
+    color: #1a1a1a;
+    padding: 0.3rem 0.6rem;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 400;
+    border: 1px solid #e0e0e0;
+    display: inline-block;
+}
+
+.cert-badge::before {
+    content: '';
 }
 
 .video-badge {
@@ -686,74 +696,32 @@ main {
 }
 
 .diamond-info {
-    padding: 0.75rem;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    text-align: center;
 }
 
 .diamond-info h3 {
     font-size: 13px;
     margin-bottom: 0.5rem;
-    color: #1f2937;
-    line-height: 1.3;
+    color: #1a1a1a;
+    line-height: 1.4;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    text-align: center;
 }
 
 .diamond-price {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #2563eb;
-    margin-bottom: 0.75rem;
-}
-
-.price-usd {
-    font-size: 11px;
-    color: #6b7280;
+    font-size: 13px;
     font-weight: 400;
-    margin-left: 0.3rem;
+    color: #666;
+    margin-bottom: 0;
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
 }
 
-.diamond-specs {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    margin-bottom: 0.75rem;
-}
 
-.spec-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-}
-
-.spec-row .label {
-    color: #6b7280;
-}
-
-.spec-row .value {
-    font-weight: 500;
-    color: #1f2937;
-}
-
-.cert-num {
-    font-family: monospace;
-    font-size: 10px;
-}
-
-.video-link {
-    width: 100%;
-    padding: 0.4rem;
-    background: #eff6ff;
-    color: #2563eb;
-    border: 1px solid #2563eb;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.video-link:hover {
-    background: #2563eb;
-    color: white;
-}
 
 /* Pagination */
 .pagination {
@@ -806,6 +774,18 @@ main {
 
 
 /* Responsive */
+@media (max-width: 1200px) {
+    .diamond-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .diamond-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .filter-row {
         grid-template-columns: 1fr;
