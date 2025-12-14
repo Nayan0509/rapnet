@@ -7,32 +7,8 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configure CORS to allow requests from your Shopify store
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Allow requests from your Shopify store and localhost
-        const allowedOrigins = [
-            'https://www.soulique.in', // Replace with your actual Shopify store URL
-            'http://localhost:3000',
-            'http://127.0.0.1:3000'
-        ];
-
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-
-        // Check if origin ends with .myshopify.com (for all Shopify stores)
-        if (origin.endsWith('.myshopify.com') || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
+// Configure CORS - Allow all origins for now
+app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -117,9 +93,15 @@ app.post('/apps/diamond/createProduct', async (req, res) => {
         // Check if Shopify credentials are configured
         if (!process.env.SHOPIFY_STORE || !process.env.SHOPIFY_ACCESS_TOKEN) {
             console.error('Shopify credentials not configured');
-            return res.status(500).json({
+            console.error('SHOPIFY_STORE:', process.env.SHOPIFY_STORE ? 'Set' : 'Missing');
+            console.error('SHOPIFY_ACCESS_TOKEN:', process.env.SHOPIFY_ACCESS_TOKEN ? 'Set' : 'Missing');
+            return res.status(400).json({
                 error: 'Shopify not configured',
-                message: 'Please add SHOPIFY_STORE and SHOPIFY_ACCESS_TOKEN to .env file'
+                message: 'Please add SHOPIFY_STORE and SHOPIFY_ACCESS_TOKEN to .env file',
+                details: {
+                    shopify_store: process.env.SHOPIFY_STORE ? 'configured' : 'missing',
+                    shopify_token: process.env.SHOPIFY_ACCESS_TOKEN ? 'configured' : 'missing'
+                }
             });
         }
 
