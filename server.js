@@ -84,6 +84,242 @@ app.post('/api/diamonds/search', async (req, res) => {
     }
 });
 
+// Configure Nodemailer
+const nodemailer = require('nodemailer');
+
+// Create email transporter
+let transporter = null;
+
+function getEmailTransporter() {
+    if (!transporter && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+        transporter = nodemailer.createTransporter({
+            host: process.env.SMTP_HOST,
+            port: parseInt(process.env.SMTP_PORT) || 587,
+            secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS
+            }
+        });
+        console.log('Email transporter configured');
+    }
+    return transporter;
+}
+
+// API endpoint to send diamond inquiry with email
+app.post('/api/diamonds/send-inquiry', async (req, res) => {
+    try {
+        const { customer, diamond, quantity, totalPrice, totalPriceFormatted, message } = req.body;
+        console.log('Received inquiry:', { customer: customer.email, diamond: diamond.sku });
+
+        // Validate required fields
+        if (!customer || !customer.name || !customer.email || !customer.phone) {
+            return res.status(400).json({ error: 'Customer details are required' });
+        }
+
+        if (!diamond || !diamond.sku) {
+            return res.status(400).json({ error: 'Diamond details are required' });
+        }
+
+        const ownerEmail = process.env.OWNER_EMAIL || 'owner@example.com';
+        const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
+
+        // Owner Email HTML
+        const ownerEmailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    .content { background: #f9f9f9; padding: 20px; }
+    .section { margin-bottom: 20px; }
+    .section h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 8px; border-bottom: 1px solid #ddd; }
+    td:first-child { font-weight: bold; width: 40%; }
+    .highlight { background: #fff; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; }
+    .diamond-image { max-width: 100%; height: auto; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔷 New Diamond Inquiry</h1>
+    </div>
+    <div class="content">
+      <div class="section">
+        <h3>👤 Customer Information</h3>
+        <table>
+          <tr><td>Name:</td><td>${customer.name}</td></tr>
+          <tr><td>Email:</td><td><a href="mailto:${customer.email}">${customer.email}</a></td></tr>
+          <tr><td>Phone:</td><td><a href="tel:${customer.phone}">${customer.phone}</a></td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3>💎 Diamond Details</h3>
+        <table>
+          <tr><td>SKU:</td><td>${diamond.sku}</td></tr>
+          <tr><td>Name:</td><td>${diamond.name}</td></tr>
+          <tr><td>Shape:</td><td>${diamond.shape || 'N/A'}</td></tr>
+          <tr><td>Carat:</td><td>${diamond.size || 'N/A'}</td></tr>
+          <tr><td>Color:</td><td>${diamond.color || 'N/A'}</td></tr>
+          <tr><td>Clarity:</td><td>${diamond.clarity || 'N/A'}</td></tr>
+          <tr><td>Cut:</td><td>${diamond.cut || 'N/A'}</td></tr>
+          <tr><td>Polish:</td><td>${diamond.polish || 'N/A'}</td></tr>
+          <tr><td>Symmetry:</td><td>${diamond.symmetry || 'N/A'}</td></tr>
+          <tr><td>Lab:</td><td>${diamond.lab || 'N/A'}</td></tr>
+          <tr><td>Certificate:</td><td>${diamond.cert_num || 'N/A'}</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <h3>💰 Pricing</h3>
+        <table>
+          <tr><td>Price per unit:</td><td>${diamond.priceFormatted}</td></tr>
+          <tr><td>Quantity:</td><td>${quantity}</td></tr>
+          <tr><td><strong>Total Price:</strong></td><td><strong>${totalPriceFormatted}</strong></td></tr>
+        </table>
+      </div>
+
+      ${message ? `
+      <div class="section">
+        <h3>💬 Customer Message</h3>
+        <div class="highlight">${message}</div>
+      </div>
+      ` : ''}
+
+      ${diamond.image ? `
+      <div class="section">
+        <h3>📸 Diamond Image</h3>
+        <img src="${diamond.image}" alt="${diamond.name}" class="diamond-image">
+      </div>
+      ` : ''}
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+        // Customer Email HTML
+        const customerEmailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #3498db; color: white; padding: 20px; text-align: center; }
+    .content { background: #f9f9f9; padding: 20px; }
+    .section { margin-bottom: 20px; }
+    .section h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 8px; border-bottom: 1px solid #ddd; }
+    td:first-child { font-weight: bold; width: 40%; }
+    .diamond-image { max-width: 100%; height: auto; margin-top: 15px; }
+    .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>✨ Thank You for Your Inquiry!</h1>
+    </div>
+    <div class="content">
+      <p>Dear ${customer.name},</p>
+      <p>Thank you for your interest in our diamond. We have received your inquiry and our team will get back to you shortly.</p>
+
+      <div class="section">
+        <h3>💎 Your Inquiry Details</h3>
+        <table>
+          <tr><td>Diamond:</td><td>${diamond.name}</td></tr>
+          <tr><td>SKU:</td><td>${diamond.sku}</td></tr>
+          <tr><td>Shape:</td><td>${diamond.shape || 'N/A'}</td></tr>
+          <tr><td>Carat:</td><td>${diamond.size || 'N/A'}</td></tr>
+          <tr><td>Color:</td><td>${diamond.color || 'N/A'}</td></tr>
+          <tr><td>Clarity:</td><td>${diamond.clarity || 'N/A'}</td></tr>
+          <tr><td>Cut:</td><td>${diamond.cut || 'N/A'}</td></tr>
+          <tr><td>Price per unit:</td><td>${diamond.priceFormatted}</td></tr>
+          <tr><td>Quantity:</td><td>${quantity}</td></tr>
+          <tr><td><strong>Total:</strong></td><td><strong>${totalPriceFormatted}</strong></td></tr>
+        </table>
+      </div>
+
+      ${diamond.image ? `
+      <div class="section">
+        <img src="${diamond.image}" alt="${diamond.name}" class="diamond-image">
+      </div>
+      ` : ''}
+
+      <p>We will review your inquiry and contact you within 24 hours.</p>
+      <p>If you have any urgent questions, please feel free to contact us directly.</p>
+    </div>
+    <div class="footer">
+      <p>Best regards,<br><strong>Your Diamond Store Team</strong></p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+        // Try to send emails
+        const emailTransporter = getEmailTransporter();
+
+        if (emailTransporter) {
+            try {
+                // Send email to owner
+                await emailTransporter.sendMail({
+                    from: `"Diamond Inquiry" <${fromEmail}>`,
+                    to: ownerEmail,
+                    subject: `🔷 New Diamond Inquiry - ${diamond.name}`,
+                    html: ownerEmailHTML
+                });
+                console.log('Owner email sent successfully');
+
+                // Send confirmation email to customer
+                await emailTransporter.sendMail({
+                    from: `"Diamond Store" <${fromEmail}>`,
+                    to: customer.email,
+                    subject: `✨ Your Diamond Inquiry - ${diamond.name}`,
+                    html: customerEmailHTML
+                });
+                console.log('Customer email sent successfully');
+
+                res.json({
+                    success: true,
+                    message: 'Inquiry sent successfully. You will receive a confirmation email shortly.',
+                    emailSent: true
+                });
+            } catch (emailError) {
+                console.error('Error sending email:', emailError);
+                res.json({
+                    success: true,
+                    message: 'Inquiry received but email notification failed. We will contact you soon.',
+                    emailSent: false,
+                    emailError: emailError.message
+                });
+            }
+        } else {
+            console.log('Email not configured, inquiry logged only');
+            res.json({
+                success: true,
+                message: 'Inquiry received successfully. We will contact you soon.',
+                emailSent: false,
+                note: 'Email service not configured'
+            });
+        }
+
+    } catch (error) {
+        console.error('Error processing inquiry:', error);
+        res.status(500).json({
+            error: 'Failed to process inquiry',
+            details: error.message
+        });
+    }
+});
+
 // API endpoint to create Shopify product for diamond (must be before catch-all)
 app.post('/apps/diamond/createProduct', async (req, res) => {
     try {
