@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const path = require('path');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -85,14 +86,12 @@ app.post('/api/diamonds/search', async (req, res) => {
 });
 
 // Configure Nodemailer
-const nodemailer = require('nodemailer');
-
 // Create email transporter
 let transporter = null;
 
 function getEmailTransporter() {
     if (!transporter && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-        transporter = nodemailer.createTransporter({
+        transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: parseInt(process.env.SMTP_PORT) || 587,
             secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
