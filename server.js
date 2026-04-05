@@ -362,8 +362,11 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
         const ownerEmail = process.env.OWNER_EMAIL || 'owner@example.com';
         const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
 
-        // Get store URL from environment or use default
+        // Get branding and store URL from environment variables
         const storeUrl = process.env.STORE_URL || 'https://yourstore.com';
+        const brandName = process.env.BRAND_NAME || 'Diamond Store';
+        const brandLogo = process.env.BRAND_LOGO_URL || '';
+        const brandColor = process.env.BRAND_COLOR || '#667eea';
 
         // Build diamond table rows for email
         const diamondRows = diamonds.map(d => `
@@ -388,11 +391,6 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
             <td style="padding: 12px 8px; text-align: right; font-weight: 600; color: #c9a961;">${d.priceFormatted}</td>
           </tr>
         `).join('');
-
-        // Get branding from environment variables
-        const brandName = process.env.BRAND_NAME || 'Diamond Store';
-        const brandLogo = process.env.BRAND_LOGO_URL || '';
-        const brandColor = process.env.BRAND_COLOR || '#667eea';
 
         // Owner Email HTML
         const ownerEmailHTML = `
