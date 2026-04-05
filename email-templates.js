@@ -1,17 +1,17 @@
 // Modern Email Templates with Dark Mode Support for Diamond Inquiry System
 
 function generateOwnerEmail({ customer, diamond, quantity, totalPriceFormatted, message, brandName, brandLogo, brandColor, storeUrl, diamondViewUrl }) {
-  const inquiryId = Date.now();
-  const inquiryDate = new Date().toLocaleString('en-US', { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric', 
-    hour: '2-digit', 
-    minute: '2-digit',
-    hour12: true 
-  });
+    const inquiryId = Date.now();
+    const inquiryDate = new Date().toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
 
-  return `
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -186,7 +186,7 @@ function generateOwnerEmail({ customer, diamond, quantity, totalPriceFormatted, 
 }
 
 function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatted, brandName, brandLogo, brandColor, storeUrl, diamondViewUrl }) {
-  return `
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -210,11 +210,15 @@ function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatte
       <td align="center">
         <table width="700" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
           
-          <!-- Header with Logo -->
+          <!-- Header with Logo and Diamond Icon -->
           <tr>
-            <td style="padding: 30px 40px; text-align: center; background-color: #ffffff;">
+            <td style="padding: 30px 40px 20px 40px; text-align: center; background-color: #ffffff;">
               ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" style="max-height: 50px; width: auto;">` : `<div style="font-size: 24px; font-weight: 600; color: ${brandColor};">${brandName}</div>`}
-              <div style="font-size: 40px; margin: 10px 0;">💎</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 40px 20px 40px; text-align: center; background-color: #ffffff;">
+              <div style="font-size: 40px; margin: 0;">💎</div>
             </td>
           </tr>
 
@@ -226,7 +230,7 @@ function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatte
               
               <!-- Your Selected Diamonds -->
               <h2 style="margin: 0 0 20px 0; font-size: 15px; font-weight: 600; color: #1a1a1a;">
-                <span style="color: #4A90E2; margin-right: 8px;">�</span>Your Selected Diamonds
+                <span style="color: #4A90E2; margin-right: 8px;">💎</span>Your Selected Diamonds
               </h2>
               
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #e8e8e8; border-radius: 6px; overflow: hidden; margin-bottom: 25px;">
@@ -244,8 +248,8 @@ function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatte
                   <tr>
                     <td style="padding: 15px; text-align: center; font-size: 14px; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">1</td>
                     <td style="padding: 15px; border-bottom: 1px solid #e8e8e8;">
-                      <div style="font-weight: 500; font-size: 13px; color: #1a1a1a; margin-bottom: 3px;">${diamond.name}</div>
-                      ${diamond.lab ? `<div style="font-size: 11px; color: #999999;">Certificate: ${diamond.lab}${diamond.cert_num ? ` #${diamond.cert_num}` : ''}</div>` : ''}
+                      <a href="${diamondViewUrl}" style="color: #4A90E2; text-decoration: none; font-weight: 500; font-size: 13px;" target="_blank">${diamond.name}</a>
+                      ${diamond.lab ? `<div style="font-size: 11px; color: #999999; margin-top: 3px;">Certificate: ${diamond.lab}${diamond.cert_num ? ` #${diamond.cert_num}` : ''}</div>` : ''}
                     </td>
                     <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">${diamond.shape || 'N/A'}</td>
                     <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; font-weight: 600; border-bottom: 1px solid #e8e8e8;">${diamond.size || 'N/A'}</td>
@@ -259,10 +263,14 @@ function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatte
                 </tbody>
               </table>
 
-              <!-- Response Time Notice -->
-              <p style="margin: 0 0 15px 0; font-size: 14px; color: #666666; line-height: 1.6;">We will review your inquiry and contact you within <strong>24 hours</strong>.</p>
-              
-              <p style="margin: 0 0 30px 0; font-size: 14px; color: #666666; line-height: 1.6;">If you have any urgent questions, please feel free to contact us directly.</p>
+              <!-- Yellow Alert Box -->
+              <div style="background-color: #fff9e6; border: 1px solid #f39c12; border-radius: 6px; padding: 15px 20px; margin-bottom: 20px;">
+                <p style="margin: 0; font-size: 13px; color: #856404; line-height: 1.6;">
+                  We will review your inquiry and contact you within <strong>24 hours</strong>.
+                </p>
+              </div>
+
+              <p style="margin: 0; font-size: 14px; color: #666666; line-height: 1.6;">If you have any urgent questions, please feel free to contact us directly.</p>
             </td>
           </tr>
 
@@ -284,6 +292,6 @@ function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatte
 }
 
 module.exports = {
-  generateOwnerEmail,
-  generateCustomerEmail
+    generateOwnerEmail,
+    generateCustomerEmail
 };
