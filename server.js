@@ -490,158 +490,87 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
 </body>
 </html>
         `;
-</head >
-            <body>
-                <div class="container">
-                    <div class="header">
-                        ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
-                        <h1>💎 New Diamond Inquiry</h1>
-                        <p>${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} • Total Value: ${totalValueFormatted}</p>
-                    </div>
-                    <div class="content">
-
-                        <div class="section">
-                            <h3>👤 Customer Information</h3>
-                            <table class="info-table">
-                                <tr><td>Name:</td><td>${customer.name}</td></tr>
-                                <tr><td>Email:</td><td><a href="mailto:${customer.email}" style="color: #667eea; text-decoration: none;">${customer.email}</a></td></tr>
-                                <tr><td>Phone:</td><td><a href="tel:${customer.phone}" style="color: #667eea; text-decoration: none;">${customer.phone}</a></td></tr>
-                            </table>
-                        </div>
-
-                        <div class="section">
-                            <h3>💎 Diamond${diamonds.length > 1 ? 's' : ''} Details <span class="badge">${diamonds.length} Item${diamonds.length > 1 ? 's' : ''}</span></h3>
-                            <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
-                                <strong>📌 Click on diamond names to view full details on your website</strong>
-                            </p>
-                            <table class="diamond-table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Diamond (Click to View)</th>
-                                        <th style="text-align: center;">SKU / Cert #</th>
-                                        <th style="text-align: center;">Shape</th>
-                                        <th style="text-align: center;">Carat</th>
-                                        <th style="text-align: center;">Color</th>
-                                        <th style="text-align: center;">Clarity</th>
-                                        <th style="text-align: center;">Cut</th>
-                                        <th style="text-align: right;">Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${diamondRows}
-                                    <tr class="total-row">
-                                        <td colspan="8" style="text-align: right;">TOTAL VALUE:</td>
-                                        <td style="text-align: right; color: ${brandColor};">${totalValueFormatted}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        ${message ? `
-      <div class="section">
-        <h3>💬 Customer Message</h3>
-        <div class="highlight">${message.replace(/\n/g, '<br>')}</div>
-      </div>
-      ` : ''}
-
-                        <div class="section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
-                            <p style="margin: 0; color: #666; font-size: 14px;">
-                                <strong>⏰ Action Required:</strong> Please respond to this inquiry within 24 hours.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <p style="margin: 0; color: #999; font-size: 12px;">
-                            This inquiry was sent from <strong>${brandName}</strong><br>
-                                ${storeUrl}
-                        </p>
-                    </div>
-                </div>
-            </body>
-</html >
-            `;
 
         // Customer Email HTML - Diamond table rows
         const customerDiamondRows = diamonds.map(d => `
-            < tr style = "border-bottom: 1px solid #e0e0e0;" >
+          <tr style="border-bottom: 1px solid #e0e0e0;">
             <td style="padding: 12px 8px; font-weight: 600; color: #333;">${d.index}</td>
             <td style="padding: 12px 8px; color: #333;">${d.name}</td>
             <td style="padding: 12px 8px; text-align: center; color: #333;">${d.shape}</td>
             <td style="padding: 12px 8px; text-align: center; color: #333;">${d.size}</td>
             <td style="padding: 12px 8px; text-align: center; color: #333;">${d.color}-${d.clarity}</td>
             <td style="padding: 12px 8px; text-align: right; font-weight: 600; color: #c9a961;">${d.priceFormatted}</td>
-          </tr >
-            `).join('');
+          </tr>
+        `).join('');
 
         const customerEmailHTML = `
-            < !DOCTYPE html >
-                <html>
-                    <head>
-                        <style>
-                            body {font - family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5; }
-                            .container {max - width: 700px; margin: 0 auto; padding: 20px; }
-                            .header {background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
-                            ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
-                            .header h1 {margin: 0; font-size: 26px; }
-                            .content {background: #fff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
-                            .section {margin - bottom: 25px; }
-                            .section h3 {color: ${brandColor}; border-bottom: 2px solid ${brandColor}; padding-bottom: 8px; margin-bottom: 15px; }
-                            .diamond-table {width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-                            .diamond-table th {background: #f8f9fa; padding: 10px 8px; text-align: left; font-weight: 600; color: #333; border-bottom: 2px solid ${brandColor}; }
-                            .diamond-table td {color: #333; }
-                            .total-row {background: #f8f9fa; font-weight: 700; font-size: 15px; }
-                            .total-row td {padding: 12px 8px; border-top: 2px solid ${brandColor}; }
-                            .footer {text - align: center; padding: 25px; background: #f8f9fa; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0; border-top: none; }
-                            .badge {display: inline-block; background: ${brandColor}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <div class="header">
-                                ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
-                                <h1>✨ Thank You for Your Inquiry</h1>
-                            </div>
-                            <div class="content">
-                                <p>Dear ${customer.name},</p>
-                                <p>Thank you for your interest in our diamond collection. We have received your inquiry for <strong>${diamonds.length} diamond${diamonds.length > 1 ? 's' : ''}</strong> and our team will contact you shortly.</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5; }
+    .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
+    .header h1 { margin: 0; font-size: 26px; }
+    .content { background: #fff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
+    .section { margin-bottom: 25px; }
+    .section h3 { color: ${brandColor}; border-bottom: 2px solid ${brandColor}; padding-bottom: 8px; margin-bottom: 15px; }
+    .diamond-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+    .diamond-table th { background: #f8f9fa; padding: 10px 8px; text-align: left; font-weight: 600; color: #333; border-bottom: 2px solid ${brandColor}; }
+    .diamond-table td { color: #333; }
+    .total-row { background: #f8f9fa; font-weight: 700; font-size: 15px; }
+    .total-row td { padding: 12px 8px; border-top: 2px solid ${brandColor}; }
+    .footer { text-align: center; padding: 25px; background: #f8f9fa; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0; border-top: none; }
+    .badge { display: inline-block; background: ${brandColor}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
+      <h1>✨ Thank You for Your Inquiry</h1>
+    </div>
+    <div class="content">
+      <p>Dear ${customer.name},</p>
+      <p>Thank you for your interest in our diamond collection. We have received your inquiry for <strong>${diamonds.length} diamond${diamonds.length > 1 ? 's' : ''}</strong> and our team will contact you shortly.</p>
 
-                                <div class="section">
-                                    <h3>💎 Selected Diamond${diamonds.length > 1 ? 's' : ''} <span class="badge">${diamonds.length} Item${diamonds.length > 1 ? 's' : ''}</span></h3>
-                                    <table class="diamond-table">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Diamond</th>
-                                                <th style="text-align: center;">Shape</th>
-                                                <th style="text-align: center;">Carat</th>
-                                                <th style="text-align: center;">Grade</th>
-                                                <th style="text-align: right;">Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${customerDiamondRows}
-                                            <tr class="total-row">
-                                                <td colspan="5" style="text-align: right;">TOTAL VALUE:</td>
-                                                <td style="text-align: right; color: ${brandColor};">${totalValueFormatted}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+      <div class="section">
+        <h3>💎 Selected Diamond${diamonds.length > 1 ? 's' : ''} <span class="badge">${diamonds.length} Item${diamonds.length > 1 ? 's' : ''}</span></h3>
+        <table class="diamond-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Diamond</th>
+              <th style="text-align: center;">Shape</th>
+              <th style="text-align: center;">Carat</th>
+              <th style="text-align: center;">Grade</th>
+              <th style="text-align: right;">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${customerDiamondRows}
+            <tr class="total-row">
+              <td colspan="5" style="text-align: right;">TOTAL VALUE:</td>
+              <td style="text-align: right; color: ${brandColor};">${totalValueFormatted}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-                                <p style="margin-top: 25px;">Our diamond specialist will review your inquiry and contact you within <strong>24 hours</strong>.</p>
-                                <p>For immediate assistance, please feel free to contact us directly.</p>
-                            </div>
-                            <div class="footer">
-                                <p style="margin: 0; font-size: 16px;"><strong>Best regards,</strong></p>
-                                <p style="margin: 5px 0 0 0; color: ${brandColor}; font-weight: 600;">${brandName} Team</p>
-                                <p style="margin: 10px 0 0 0; font-size: 12px; color: #999;">
-                                    <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
-                                </p>
-                            </div>
-                        </div>
-                    </body>
-                </html>
+      <p style="margin-top: 25px;">Our diamond specialist will review your inquiry and contact you within <strong>24 hours</strong>.</p>
+      <p>For immediate assistance, please feel free to contact us directly.</p>
+    </div>
+    <div class="footer">
+      <p style="margin: 0; font-size: 16px;"><strong>Best regards,</strong></p>
+      <p style="margin: 5px 0 0 0; color: ${brandColor}; font-weight: 600;">${brandName} Team</p>
+      <p style="margin: 10px 0 0 0; font-size: 12px; color: #999;">
+        <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
         `;
 
         // Try to send emails
@@ -651,18 +580,18 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
             try {
                 // Send email to owner
                 await emailTransporter.sendMail({
-                    from: `"Diamond Inquiry" < ${ fromEmail }> `,
+                    from: `"Diamond Inquiry" <${fromEmail}>`,
                     to: ownerEmail,
-                    subject: `💎 New Diamond Inquiry - ${ diamonds.length } Diamond${ diamonds.length > 1 ? 's' : '' } (${ totalValueFormatted })`,
+                    subject: `💎 New Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} (${totalValueFormatted})`,
                     html: ownerEmailHTML
                 });
                 console.log('Owner wishlist email sent successfully');
 
                 // Send confirmation email to customer
                 await emailTransporter.sendMail({
-                    from: `"Diamond Store" < ${ fromEmail }> `,
+                    from: `"Diamond Store" <${fromEmail}>`,
                     to: customer.email,
-                    subject: `✨ Thank You for Your Diamond Inquiry - ${ diamonds.length } Diamond${ diamonds.length > 1 ? 's' : '' } `,
+                    subject: `✨ Thank You for Your Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''}`,
                     html: customerEmailHTML
                 });
                 console.log('Customer wishlist email sent successfully');
@@ -728,86 +657,86 @@ app.post('/apps/diamond/createProduct', async (req, res) => {
         const sku = diamond.stock_num || diamond.diamond_id;
         const searchUrl = `https://${shopifyStore}/admin/api/2024-01/products.json?fields=id,variants&limit=250`;
 
-let existingProduct = null;
-try {
-    const searchResponse = await axios.get(searchUrl, {
-        headers: {
-            'X-Shopify-Access-Token': shopifyAccessToken,
-            'Content-Type': 'application/json'
-        }
-    });
+        let existingProduct = null;
+        try {
+            const searchResponse = await axios.get(searchUrl, {
+                headers: {
+                    'X-Shopify-Access-Token': shopifyAccessToken,
+                    'Content-Type': 'application/json'
+                }
+            });
 
-    // Search for product with matching SKU
-    for (const product of searchResponse.data.products) {
-        const variant = product.variants.find(v => v.sku === sku);
-        if (variant) {
-            existingProduct = { id: product.id, variant_id: variant.id };
-            console.log('Found existing product:', existingProduct);
-            break;
-        }
-    }
-} catch (searchError) {
-    console.log('Error searching for existing product:', searchError.message);
-}
-
-// If product exists, return it
-if (existingProduct) {
-    return res.json({
-        id: `gid://shopify/ProductVariant/${existingProduct.variant_id}`,
-        product_id: `gid://shopify/Product/${existingProduct.id}`,
-        variants: [{ id: existingProduct.variant_id }]
-    });
-}
-
-// Create new product
-const diamondName = `${diamond.lab || ''} ${diamond.size || 'N/A'} Carat ${diamond.color || ''}-${diamond.clarity || ''} ${diamond.cut || ''} Cut ${diamond.shape || ''} Diamond`.trim();
-const price = diamond.total_sales_price_in_currency || diamond.total_sales_price || 0;
-
-const productData = {
-    product: {
-        title: diamondName,
-        body_html: generateDiamondDescription(diamond),
-        vendor: diamond.lab || 'Diamond Vendor',
-        product_type: 'Diamond',
-        tags: ['Diamond', diamond.shape, diamond.lab, diamond.color, diamond.clarity].filter(Boolean).join(', '),
-        variants: [
-            {
-                price: price.toString(),
-                sku: sku,
-                inventory_management: null, // Don't track inventory for vendor products
-                inventory_policy: 'continue', // Allow selling when out of stock
-                weight: diamond.size || 0,
-                weight_unit: 'ct'
+            // Search for product with matching SKU
+            for (const product of searchResponse.data.products) {
+                const variant = product.variants.find(v => v.sku === sku);
+                if (variant) {
+                    existingProduct = { id: product.id, variant_id: variant.id };
+                    console.log('Found existing product:', existingProduct);
+                    break;
+                }
             }
-        ],
-        images: diamond.image_file ? [{ src: diamond.image_file }] : []
-    }
-};
+        } catch (searchError) {
+            console.log('Error searching for existing product:', searchError.message);
+        }
 
-const createUrl = `https://${shopifyStore}/admin/api/2024-01/products.json`;
-const createResponse = await axios.post(createUrl, productData, {
-    headers: {
-        'X-Shopify-Access-Token': shopifyAccessToken,
-        'Content-Type': 'application/json'
-    }
-});
+        // If product exists, return it
+        if (existingProduct) {
+            return res.json({
+                id: `gid://shopify/ProductVariant/${existingProduct.variant_id}`,
+                product_id: `gid://shopify/Product/${existingProduct.id}`,
+                variants: [{ id: existingProduct.variant_id }]
+            });
+        }
 
-const createdProduct = createResponse.data.product;
-console.log('Product created successfully:', createdProduct.id);
+        // Create new product
+        const diamondName = `${diamond.lab || ''} ${diamond.size || 'N/A'} Carat ${diamond.color || ''}-${diamond.clarity || ''} ${diamond.cut || ''} Cut ${diamond.shape || ''} Diamond`.trim();
+        const price = diamond.total_sales_price_in_currency || diamond.total_sales_price || 0;
 
-res.json({
-    id: `gid://shopify/ProductVariant/${createdProduct.variants[0].id}`,
-    product_id: `gid://shopify/Product/${createdProduct.id}`,
-    variants: createdProduct.variants
-});
+        const productData = {
+            product: {
+                title: diamondName,
+                body_html: generateDiamondDescription(diamond),
+                vendor: diamond.lab || 'Diamond Vendor',
+                product_type: 'Diamond',
+                tags: ['Diamond', diamond.shape, diamond.lab, diamond.color, diamond.clarity].filter(Boolean).join(', '),
+                variants: [
+                    {
+                        price: price.toString(),
+                        sku: sku,
+                        inventory_management: null, // Don't track inventory for vendor products
+                        inventory_policy: 'continue', // Allow selling when out of stock
+                        weight: diamond.size || 0,
+                        weight_unit: 'ct'
+                    }
+                ],
+                images: diamond.image_file ? [{ src: diamond.image_file }] : []
+            }
+        };
+
+        const createUrl = `https://${shopifyStore}/admin/api/2024-01/products.json`;
+        const createResponse = await axios.post(createUrl, productData, {
+            headers: {
+                'X-Shopify-Access-Token': shopifyAccessToken,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const createdProduct = createResponse.data.product;
+        console.log('Product created successfully:', createdProduct.id);
+
+        res.json({
+            id: `gid://shopify/ProductVariant/${createdProduct.variants[0].id}`,
+            product_id: `gid://shopify/Product/${createdProduct.id}`,
+            variants: createdProduct.variants
+        });
 
     } catch (error) {
-    console.error('Error creating Shopify product:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({
-        error: 'Failed to create product',
-        details: error.response?.data?.errors || error.message
-    });
-}
+        console.error('Error creating Shopify product:', error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
+            error: 'Failed to create product',
+            details: error.response?.data?.errors || error.message
+        });
+    }
 });
 
 // Helper function to generate diamond description
