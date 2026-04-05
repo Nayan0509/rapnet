@@ -239,9 +239,9 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5; }
     .container { max-width: 700px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: #000000; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
     ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
-    .header h1 { margin: 0; font-size: 26px; color: white; }
+    .header h1 { margin: 0; font-size: 26px; color: #000000; }
     .content { background: #fff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
     .section { margin-bottom: 25px; }
     .section h3 { color: ${brandColor}; border-bottom: 2px solid ${brandColor}; padding-bottom: 8px; margin-bottom: 15px; }
@@ -336,7 +336,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: #3498db; color: white; padding: 20px; text-align: center; }
+    .header { background: #3498db; color: #000000; padding: 20px; text-align: center; }
     .content { background: #f9f9f9; padding: 20px; }
     .section { margin-bottom: 20px; }
     .section h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
@@ -503,9 +503,9 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background: #f5f7fa; }
     .email-container { max-width: 900px; margin: 30px auto; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
-    .header { background: linear-gradient(135deg, ${brandColor} 0%, #667eea 100%); color: white; padding: 40px 30px; text-align: center; }
+    .header { background: linear-gradient(135deg, ${brandColor} 0%, #667eea 100%); color: #000000; padding: 40px 30px; text-align: center; }
     .logo { max-width: 180px; margin-bottom: 20px; }
-    .header h1 { margin: 0; font-size: 28px; color: white; font-weight: 600; letter-spacing: -0.5px; }
+    .header h1 { margin: 0; font-size: 28px; color: #000000; font-weight: 600; letter-spacing: -0.5px; }
     .header p { margin: 12px 0 0 0; font-size: 15px; color: rgba(255,255,255,0.9); font-weight: 400; }
     .content { padding: 40px; background: #fff; }
     .section { margin-bottom: 35px; }
@@ -614,7 +614,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5; }
     .container { max-width: 700px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: #000000; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
     ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
     .header h1 { margin: 0; font-size: 26px; }
     .content { background: #fff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
@@ -626,7 +626,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
     .total-row { background: #f8f9fa; font-weight: 700; font-size: 15px; }
     .total-row td { padding: 12px 8px; border-top: 2px solid ${brandColor}; }
     .footer { text-align: center; padding: 25px; background: #f8f9fa; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0; border-top: none; }
-    .badge { display: inline-block; background: ${brandColor}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .badge { display: inline-block; background: ${brandColor}; color: #000000; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
   </style>
 </head>
 <body>
