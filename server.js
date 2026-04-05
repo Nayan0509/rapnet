@@ -236,94 +236,186 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
 <!DOCTYPE html>
 <html>
 <head>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5; }
-    .container { max-width: 700px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: #000000; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
-    ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
-    .header h1 { margin: 0; font-size: 26px; color: #000000; }
-    .content { background: #fff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
-    .section { margin-bottom: 25px; }
-    .section h3 { color: ${brandColor}; border-bottom: 2px solid ${brandColor}; padding-bottom: 8px; margin-bottom: 15px; }
-    table { width: 100%; border-collapse: collapse; }
-    td { padding: 10px; border-bottom: 1px solid #f0f0f0; color: #333; }
-    td:first-child { font-weight: 600; width: 40%; color: #666; }
-    .highlight { background: #f8f9fa; padding: 15px; border-left: 4px solid ${brandColor}; margin: 10px 0; color: #333; }
-    .diamond-image { max-width: 100%; height: auto; margin-top: 15px; }
-    .diamond-link { color: ${brandColor}; text-decoration: none; font-weight: 600; }
-    .diamond-link:hover { text-decoration: underline; }
-    .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0; border-top: none; }
-  </style>
+  <meta charset="UTF-8">
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
-      <h1>🔷 New Diamond Inquiry</h1>
-    </div>
-    <div class="content">
-      <div class="section">
-        <h3>👤 Customer Information</h3>
-        <table>
-          <tr><td>Name:</td><td>${customer.name}</td></tr>
-          <tr><td>Email:</td><td><a href="mailto:${customer.email}" style="color: ${brandColor};">${customer.email}</a></td></tr>
-          <tr><td>Phone:</td><td><a href="tel:${customer.phone}" style="color: ${brandColor};">${customer.phone}</a></td></tr>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #e8eaf0;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #e8eaf0; padding: 30px 15px;">
+    <tr>
+      <td align="center">
+        <table width="750" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); padding: 35px 25px; text-align: center;">
+              ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" style="max-width: 180px; height: auto; margin-bottom: 15px;">` : ''}
+              <h1 style="margin: 0; font-size: 30px; color: #ffffff; font-weight: 600;">🔷 New Diamond Inquiry</h1>
+              <p style="margin: 12px 0 0 0; font-size: 16px; color: #ffffff; opacity: 0.95;">1 Diamond • Total Value: ${totalPriceFormatted}</p>
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px 35px; background-color: #ffffff;">
+              
+              <!-- Customer Information Section -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">👤 Customer Information</h3>
+                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px;">
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0; width: 180px;">Name</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${customer.name}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Email Address</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;"><a href="mailto:${customer.email}" style="color: ${brandColor}; text-decoration: none;">${customer.email}</a></td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa;">Phone Number</td>
+                        <td style="color: #1a1a1a;"><a href="tel:${customer.phone}" style="color: ${brandColor}; text-decoration: none;">${customer.phone}</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Diamond Details Section -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💎 Diamond Details</h3>
+                    <p style="margin: 0 0 15px 0; color: #4a5568; font-size: 14px;">
+                      <strong style="color: #1a1a1a;">💡 Quick Access:</strong> 
+                      <a href="${storeUrl}/pages/diamonds?id=${diamond.id}&view=diamond-product" style="color: ${brandColor}; text-decoration: none; font-weight: 600;" target="_blank">View Diamond on Website →</a>
+                    </p>
+                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px;">
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0; width: 180px;">Diamond ID</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0; font-weight: 600;">${diamond.id}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">SKU / Stock #</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.sku}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Diamond Name</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.name}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Shape</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.shape || 'N/A'}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Carat Weight</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.size || 'N/A'}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Color</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.color || 'N/A'}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Clarity</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.clarity || 'N/A'}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Cut</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.cut || 'N/A'}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Polish</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.polish || 'N/A'}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Symmetry</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.symmetry || 'N/A'}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Lab Certification</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0; font-weight: 600;">${diamond.lab || 'N/A'}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa;">Certificate Number</td>
+                        <td style="color: #1a1a1a; font-weight: 600;">${diamond.cert_num || 'N/A'}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Pricing Section -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💰 Pricing Details</h3>
+                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px;">
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0; width: 180px;">Price per unit</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.priceFormatted}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Quantity</td>
+                        <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${quantity}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: 700; color: #1a1a1a; background-color: #d5dae0;">Total Inquiry Value</td>
+                        <td style="font-weight: 700; color: #1a1a1a; background-color: #d5dae0; font-size: 16px;">${totalPriceFormatted}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              ${message ? `
+              <!-- Customer Message Section -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💬 Customer Message</h3>
+                    <div style="background-color: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 4px; color: #1a1a1a; line-height: 1.6;">
+                      ${message.replace(/\n/g, '<br>')}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              ` : ''}
+              
+              ${diamond.image ? `
+              <!-- Diamond Image Section -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <h3 style="color: #1a1a1a; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📸 Diamond Image</h3>
+                    <img src="${diamond.image}" alt="${diamond.name}" style="max-width: 100%; height: auto; border-radius: 8px; display: block;">
+                  </td>
+                </tr>
+              </table>
+              ` : ''}
+              
+              <!-- Action Note -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="background-color: #fff4cc; border: 1px solid #f59e0b; padding: 16px; text-align: center; color: #1a1a1a; font-weight: 600; border-radius: 8px;">
+                    ⏰ Please respond to this inquiry within 24 hours
+                  </td>
+                </tr>
+              </table>
+              
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="text-align: center; padding: 25px; background-color: #f5f7fa; border-top: 1px solid #e1e4e8;">
+              <p style="margin: 0; color: #1a1a1a; font-weight: 600; font-size: 14px;">${brandName}</p>
+              <p style="margin: 8px 0 0 0; color: #4a5568; font-size: 12px;">
+                <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
+              </p>
+            </td>
+          </tr>
         </table>
-      </div>
-
-      <div class="section">
-        <h3>💎 Diamond Details</h3>
-        <p style="margin-bottom: 15px;">
-          <a href="${storeUrl}/pages/diamonds?id=${diamond.id}&view=diamond-product" class="diamond-link" target="_blank">
-            📌 Click here to view diamond on website
-          </a>
-        </p>
-        <table>
-          <tr><td>Diamond ID:</td><td><strong>${diamond.id}</strong></td></tr>
-          <tr><td>SKU:</td><td>${diamond.sku}</td></tr>
-          <tr><td>Name:</td><td>${diamond.name}</td></tr>
-          <tr><td>Shape:</td><td>${diamond.shape || 'N/A'}</td></tr>
-          <tr><td>Carat:</td><td>${diamond.size || 'N/A'}</td></tr>
-          <tr><td>Color:</td><td>${diamond.color || 'N/A'}</td></tr>
-          <tr><td>Clarity:</td><td>${diamond.clarity || 'N/A'}</td></tr>
-          <tr><td>Cut:</td><td>${diamond.cut || 'N/A'}</td></tr>
-          <tr><td>Polish:</td><td>${diamond.polish || 'N/A'}</td></tr>
-          <tr><td>Symmetry:</td><td>${diamond.symmetry || 'N/A'}</td></tr>
-          <tr><td>Lab:</td><td><strong>${diamond.lab || 'N/A'}</strong></td></tr>
-          <tr><td>Certificate #:</td><td><strong>${diamond.cert_num || 'N/A'}</strong></td></tr>
-        </table>
-      </div>
-
-      <div class="section">
-        <h3>💰 Pricing</h3>
-        <table>
-          <tr><td>Price per unit:</td><td>${diamond.priceFormatted}</td></tr>
-          <tr><td>Quantity:</td><td>${quantity}</td></tr>
-          <tr><td><strong>Total Price:</strong></td><td><strong>${totalPriceFormatted}</strong></td></tr>
-        </table>
-      </div>
-
-      ${message ? `
-      <div class="section">
-        <h3>💬 Customer Message</h3>
-        <div class="highlight">${message}</div>
-      </div>
-      ` : ''}
-
-      ${diamond.image ? `
-      <div class="section">
-        <h3>📸 Diamond Image</h3>
-        <img src="${diamond.image}" alt="${diamond.name}" class="diamond-image">
-      </div>
-      ` : ''}
-    </div>
-    <div class="footer">
-      <p style="margin: 0; color: #999; font-size: 12px;">
-        This inquiry was sent from <strong>${brandName}</strong><br>
-        <a href="${storeUrl}" style="color: ${brandColor};">${storeUrl}</a>
-      </p>
-    </div>
-  </div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
     `;
@@ -334,77 +426,83 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
 <html>
 <head>
   <meta charset="UTF-8">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background: #e8eaf0; }
-    .email-wrapper { background: #e8eaf0; padding: 30px 15px; }
-    .container { max-width: 650px; margin: 0 auto; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; }
-    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: #ffffff; padding: 35px 25px; text-align: center; }
-    ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
-    .header h1 { margin: 0; font-size: 28px; color: #ffffff; font-weight: 600; }
-    .content { background: #ffffff; padding: 35px 30px; }
-    .content p { color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px; }
-    .section { margin-bottom: 30px; background: #f5f7fa; padding: 20px; border-radius: 8px; border: 1px solid #e1e4e8; }
-    .section h3 { color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600; }
-    table { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    td { padding: 12px 15px; border-bottom: 1px solid #d5dae0; color: #1a1a1a; }
-    td:first-child { font-weight: 600; width: 45%; color: #4a5568; background: #f5f7fa; }
-    td:last-child { color: #1a1a1a; }
-    tr:last-child td { border-bottom: none; }
-    .diamond-image { max-width: 100%; height: auto; margin-top: 15px; border-radius: 8px; }
-    .footer { text-align: center; padding: 30px 25px; background: #f5f7fa; border-top: 1px solid #e1e4e8; }
-    .footer p { color: #4a5568; margin: 5px 0; }
-    .highlight-box { background: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; color: #1a1a1a; border-radius: 4px; }
-  </style>
 </head>
-<body>
-  <div class="email-wrapper">
-    <div class="container">
-      <div class="header">
-        ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
-        <h1>✨ Thank You for Your Inquiry</h1>
-      </div>
-      <div class="content">
-        <p>Dear <strong>${customer.name}</strong>,</p>
-        <p>Thank you for your interest in our diamond. We have received your inquiry and our team will get back to you shortly.</p>
-
-        <div class="section">
-          <h3>💎 Your Inquiry Details</h3>
-          <table>
-            <tr><td>Diamond</td><td>${diamond.name}</td></tr>
-            <tr><td>SKU</td><td>${diamond.sku}</td></tr>
-            <tr><td>Shape</td><td>${diamond.shape || 'N/A'}</td></tr>
-            <tr><td>Carat</td><td>${diamond.size || 'N/A'}</td></tr>
-            <tr><td>Color</td><td>${diamond.color || 'N/A'}</td></tr>
-            <tr><td>Clarity</td><td>${diamond.clarity || 'N/A'}</td></tr>
-            <tr><td>Cut</td><td>${diamond.cut || 'N/A'}</td></tr>
-            <tr><td>Price per unit</td><td>${diamond.priceFormatted}</td></tr>
-            <tr><td>Quantity</td><td>${quantity}</td></tr>
-            <tr><td style="background: #d5dae0; font-weight: 700;">Total</td><td style="font-weight: 700; color: #1a1a1a;">${totalPriceFormatted}</td></tr>
-          </table>
-        </div>
-
-        ${diamond.image ? `
-        <div class="section">
-          <h3>📸 Diamond Image</h3>
-          <img src="${diamond.image}" alt="${diamond.name}" class="diamond-image">
-        </div>
-        ` : ''}
-
-        <div class="highlight-box">
-          <p style="margin: 0;"><strong>⏰ Response Time:</strong> We will review your inquiry and contact you within <strong>24 hours</strong>.</p>
-        </div>
-
-        <p style="margin-top: 20px;">If you have any urgent questions, please feel free to contact us directly.</p>
-      </div>
-      <div class="footer">
-        <p style="margin: 0; font-size: 16px; color: #1a1a1a; font-weight: 600;">Best regards,</p>
-        <p style="margin: 8px 0 0 0; color: ${brandColor}; font-weight: 600; font-size: 15px;">${brandName} Team</p>
-        <p style="margin: 15px 0 0 0; font-size: 12px;">
-          <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
-        </p>
-      </div>
-    </div>
-  </div>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #e8eaf0;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #e8eaf0; padding: 30px 15px;">
+    <tr>
+      <td align="center">
+        <table width="650" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); padding: 35px 25px; text-align: center;">
+              ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" style="max-width: 160px; height: auto; margin-bottom: 15px;">` : ''}
+              <h1 style="margin: 0; font-size: 28px; color: #ffffff; font-weight: 600;">✨ Thank You for Your Inquiry</h1>
+            </td>
+          </tr>
+          <!-- Content -->
+          <tr>
+            <td style="padding: 35px 30px; background-color: #ffffff;">
+              <p style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px;">Dear <strong>${customer.name}</strong>,</p>
+              <p style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px;">Thank you for your interest in our diamond. We have received your inquiry and our team will get back to you shortly.</p>
+              
+              <!-- Section -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💎 Your Inquiry Details</h3>
+                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px;">
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Diamond</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.name}</td></tr>
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">SKU</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.sku}</td></tr>
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Shape</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.shape || 'N/A'}</td></tr>
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Carat</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.size || 'N/A'}</td></tr>
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Color</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.color || 'N/A'}</td></tr>
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Clarity</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.clarity || 'N/A'}</td></tr>
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Cut</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.cut || 'N/A'}</td></tr>
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Price per unit</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.priceFormatted}</td></tr>
+                      <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Quantity</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${quantity}</td></tr>
+                      <tr><td style="font-weight: 700; color: #1a1a1a; background-color: #d5dae0;">Total</td><td style="font-weight: 700; color: #1a1a1a; background-color: #d5dae0;">${totalPriceFormatted}</td></tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              ${diamond.image ? `
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <h3 style="color: #1a1a1a; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📸 Diamond Image</h3>
+                    <img src="${diamond.image}" alt="${diamond.name}" style="max-width: 100%; height: auto; border-radius: 8px;">
+                  </td>
+                </tr>
+              </table>
+              ` : ''}
+              
+              <!-- Highlight Box -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
+                <tr>
+                  <td style="background-color: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 4px;">
+                    <p style="margin: 0; color: #1a1a1a;"><strong>⏰ Response Time:</strong> We will review your inquiry and contact you within <strong>24 hours</strong>.</p>
+                  </td>
+                </tr>
+              </table>
+              
+              <p style="color: #1a1a1a; margin: 20px 0 0 0; font-size: 15px;">If you have any urgent questions, please feel free to contact us directly.</p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="text-align: center; padding: 30px 25px; background-color: #f5f7fa; border-top: 1px solid #e1e4e8;">
+              <p style="margin: 0; font-size: 16px; color: #1a1a1a; font-weight: 600;">Best regards,</p>
+              <p style="margin: 8px 0 0 0; color: ${brandColor}; font-weight: 600; font-size: 15px;">${brandName} Team</p>
+              <p style="margin: 15px 0 0 0; font-size: 12px;">
+                <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
     `;
@@ -617,13 +715,13 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
 
         // Customer Email HTML - Diamond table rows
         const customerDiamondRows = diamonds.map(d => `
-          <tr style="background: #ffffff;">
-            <td style="padding: 14px 10px; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.index}</td>
-            <td style="padding: 14px 10px; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.name}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.shape}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.size}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.color}-${d.clarity}</td>
-            <td style="padding: 14px 10px; text-align: right; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.priceFormatted}</td>
+          <tr>
+            <td style="padding: 14px 10px; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.index}</td>
+            <td style="padding: 14px 10px; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.name}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.shape}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.size}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.color}-${d.clarity}</td>
+            <td style="padding: 14px 10px; text-align: right; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.priceFormatted}</td>
           </tr>
         `).join('');
 
@@ -632,77 +730,82 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
 <html>
 <head>
   <meta charset="UTF-8">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background: #e8eaf0; }
-    .email-wrapper { background: #e8eaf0; padding: 30px 15px; }
-    .container { max-width: 700px; margin: 0 auto; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; }
-    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: #ffffff; padding: 35px 25px; text-align: center; }
-    ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
-    .header h1 { margin: 0; font-size: 28px; color: #ffffff; font-weight: 600; }
-    .content { background: #ffffff; padding: 35px 30px; }
-    .content p { color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px; }
-    .section { margin-bottom: 30px; background: #f5f7fa; padding: 20px; border-radius: 8px; border: 1px solid #e1e4e8; }
-    .section h3 { color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600; }
-    .diamond-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; background: #ffffff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .diamond-table th { background: #d5dae0; padding: 12px 10px; text-align: left; font-weight: 600; color: #1a1a1a; border-bottom: 2px solid ${brandColor}; }
-    .diamond-table td { color: #1a1a1a; }
-    .total-row { background: #d5dae0; font-weight: 700; font-size: 15px; }
-    .total-row td { padding: 14px 10px; border-top: 2px solid ${brandColor}; color: #1a1a1a; border-bottom: none; }
-    .footer { text-align: center; padding: 30px 25px; background: #f5f7fa; border-top: 1px solid #e1e4e8; }
-    .footer p { color: #4a5568; margin: 5px 0; }
-    .badge { display: inline-block; background: ${brandColor}; color: #ffffff; padding: 5px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-    .highlight-box { background: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; color: #1a1a1a; border-radius: 4px; }
-  </style>
 </head>
-<body>
-  <div class="email-wrapper">
-    <div class="container">
-      <div class="header">
-        ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
-        <h1>✨ Thank You for Your Inquiry</h1>
-      </div>
-      <div class="content">
-        <p>Dear <strong>${customer.name}</strong>,</p>
-        <p>Thank you for your interest in our diamond collection. We have received your inquiry for <strong>${diamonds.length} diamond${diamonds.length > 1 ? 's' : ''}</strong> and our team will contact you shortly.</p>
-
-        <div class="section">
-          <h3>💎 Selected Diamond${diamonds.length > 1 ? 's' : ''} <span class="badge">${diamonds.length} Item${diamonds.length > 1 ? 's' : ''}</span></h3>
-          <table class="diamond-table">
-            <thead>
-              <tr>
-                <th style="width: 40px;">#</th>
-                <th>Diamond</th>
-                <th style="text-align: center; width: 80px;">Shape</th>
-                <th style="text-align: center; width: 70px;">Carat</th>
-                <th style="text-align: center; width: 90px;">Grade</th>
-                <th style="text-align: right; width: 110px;">Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${customerDiamondRows}
-              <tr class="total-row">
-                <td colspan="5" style="text-align: right; font-weight: 700;">TOTAL VALUE:</td>
-                <td style="text-align: right; color: #1a1a1a; font-weight: 700;">${totalValueFormatted}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="highlight-box">
-          <p style="margin: 0;"><strong>⏰ Response Time:</strong> Our diamond specialist will review your inquiry and contact you within <strong>24 hours</strong>.</p>
-        </div>
-
-        <p style="margin-top: 20px;">For immediate assistance, please feel free to contact us directly.</p>
-      </div>
-      <div class="footer">
-        <p style="margin: 0; font-size: 16px; color: #1a1a1a; font-weight: 600;">Best regards,</p>
-        <p style="margin: 8px 0 0 0; color: ${brandColor}; font-weight: 600; font-size: 15px;">${brandName} Team</p>
-        <p style="margin: 15px 0 0 0; font-size: 12px;">
-          <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
-        </p>
-      </div>
-    </div>
-  </div>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #e8eaf0;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #e8eaf0; padding: 30px 15px;">
+    <tr>
+      <td align="center">
+        <table width="700" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); padding: 35px 25px; text-align: center;">
+              ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" style="max-width: 160px; height: auto; margin-bottom: 15px;">` : ''}
+              <h1 style="margin: 0; font-size: 28px; color: #ffffff; font-weight: 600;">✨ Thank You for Your Inquiry</h1>
+            </td>
+          </tr>
+          <!-- Content -->
+          <tr>
+            <td style="padding: 35px 30px; background-color: #ffffff;">
+              <p style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px;">Dear <strong>${customer.name}</strong>,</p>
+              <p style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px;">Thank you for your interest in our diamond collection. We have received your inquiry for <strong>${diamonds.length} diamond${diamonds.length > 1 ? 's' : ''}</strong> and our team will contact you shortly.</p>
+              
+              <!-- Section -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">
+                      💎 Selected Diamond${diamonds.length > 1 ? 's' : ''} 
+                      <span style="display: inline-block; background-color: ${brandColor}; color: #ffffff; padding: 5px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 10px;">${diamonds.length} Item${diamonds.length > 1 ? 's' : ''}</span>
+                    </h3>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px; font-size: 13px;">
+                      <thead>
+                        <tr>
+                          <th style="padding: 12px 10px; text-align: left; font-weight: 600; color: #1a1a1a; background-color: #d5dae0; border-bottom: 2px solid ${brandColor}; width: 40px;">#</th>
+                          <th style="padding: 12px 10px; text-align: left; font-weight: 600; color: #1a1a1a; background-color: #d5dae0; border-bottom: 2px solid ${brandColor};">Diamond</th>
+                          <th style="padding: 12px 10px; text-align: center; font-weight: 600; color: #1a1a1a; background-color: #d5dae0; border-bottom: 2px solid ${brandColor}; width: 80px;">Shape</th>
+                          <th style="padding: 12px 10px; text-align: center; font-weight: 600; color: #1a1a1a; background-color: #d5dae0; border-bottom: 2px solid ${brandColor}; width: 70px;">Carat</th>
+                          <th style="padding: 12px 10px; text-align: center; font-weight: 600; color: #1a1a1a; background-color: #d5dae0; border-bottom: 2px solid ${brandColor}; width: 90px;">Grade</th>
+                          <th style="padding: 12px 10px; text-align: right; font-weight: 600; color: #1a1a1a; background-color: #d5dae0; border-bottom: 2px solid ${brandColor}; width: 110px;">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${customerDiamondRows}
+                        <tr>
+                          <td colspan="5" style="padding: 14px 10px; text-align: right; font-weight: 700; color: #1a1a1a; background-color: #d5dae0; border-top: 2px solid ${brandColor};">TOTAL VALUE:</td>
+                          <td style="padding: 14px 10px; text-align: right; font-weight: 700; color: #1a1a1a; background-color: #d5dae0; border-top: 2px solid ${brandColor};">${totalValueFormatted}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Highlight Box -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
+                <tr>
+                  <td style="background-color: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 4px;">
+                    <p style="margin: 0; color: #1a1a1a;"><strong>⏰ Response Time:</strong> Our diamond specialist will review your inquiry and contact you within <strong>24 hours</strong>.</p>
+                  </td>
+                </tr>
+              </table>
+              
+              <p style="color: #1a1a1a; margin: 20px 0 0 0; font-size: 15px;">For immediate assistance, please feel free to contact us directly.</p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="text-align: center; padding: 30px 25px; background-color: #f5f7fa; border-top: 1px solid #e1e4e8;">
+              <p style="margin: 0; font-size: 16px; color: #1a1a1a; font-weight: 600;">Best regards,</p>
+              <p style="margin: 8px 0 0 0; color: ${brandColor}; font-weight: 600; font-size: 15px;">${brandName} Team</p>
+              <p style="margin: 15px 0 0 0; font-size: 12px;">
+                <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
         `;
