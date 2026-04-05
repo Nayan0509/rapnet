@@ -231,37 +231,39 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
         const brandLogo = process.env.BRAND_LOGO_URL || '';
         const brandColor = process.env.BRAND_COLOR || '#667eea';
 
-        // Owner Email HTML
+        // Owner Email HTML - Professional Modern Design
         const ownerEmailHTML = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background-color: #e8eaf0;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #e8eaf0; padding: 30px 15px;">
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; padding: 40px 20px;">
     <tr>
       <td align="center">
-        <table width="750" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <!-- Main Container -->
+        <table width="700" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;">
+          
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); padding: 35px 25px; text-align: center;">
-              ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" style="max-width: 180px; height: auto; margin-bottom: 15px;">` : ''}
-              <h1 style="margin: 0; font-size: 30px; color: #ffffff; font-weight: 600;">🔷 New Diamond Inquiry</h1>
-              <p style="margin: 12px 0 0 0; font-size: 16px; color: #ffffff; opacity: 0.95;">1 Diamond • Total Value: ${totalPriceFormatted}</p>
+            <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 40px 35px 40px; text-align: center;">
+              ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" style="max-width: 160px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">` : ''}
+              <h1 style="margin: 0; font-size: 28px; color: #ffffff; font-weight: 600; letter-spacing: -0.5px;">New Diamond Inquiry</h1>
+              <p style="margin: 12px 0 0 0; font-size: 15px; color: rgba(255,255,255,0.9);">1 Diamond � ${totalPriceFormatted}</p>
             </td>
           </tr>
           
           <!-- Content -->
           <tr>
-            <td style="padding: 40px 35px; background-color: #ffffff;">
+            <td style="padding: 40px 35px; background-color: #fafafa;">
               
               <!-- Customer Information Section -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
                 <tr>
                   <td style="padding: 20px;">
-                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">👤 Customer Information</h3>
-                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">?? Customer Information</h3>
+                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 6px;">
                       <tr>
                         <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0; width: 180px;">Name</td>
                         <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${customer.name}</td>
@@ -283,12 +285,12 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
                 <tr>
                   <td style="padding: 20px;">
-                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💎 Diamond Details</h3>
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">?? Diamond Details</h3>
                     <p style="margin: 0 0 15px 0; color: #4a5568; font-size: 14px;">
-                      <strong style="color: #1a1a1a;">💡 Quick Access:</strong> 
-                      <a href="${storeUrl}/pages/diamonds?id=${diamond.id}&view=diamond-product" style="color: ${brandColor}; text-decoration: none; font-weight: 600;" target="_blank">View Diamond on Website →</a>
+                      <strong style="color: #1a1a1a;">?? Quick Access:</strong> 
+                      <a href="${storeUrl}/pages/diamonds?id=${diamond.id}&view=diamond-product" style="color: ${brandColor}; text-decoration: none; font-weight: 600;" target="_blank">View Diamond on Website ?</a>
                     </p>
-                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px;">
+                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 6px;">
                       <tr>
                         <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0; width: 180px;">Diamond ID</td>
                         <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0; font-weight: 600;">${diamond.id}</td>
@@ -346,8 +348,8 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
                 <tr>
                   <td style="padding: 20px;">
-                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💰 Pricing Details</h3>
-                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">?? Pricing Details</h3>
+                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 6px;">
                       <tr>
                         <td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0; width: 180px;">Price per unit</td>
                         <td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.priceFormatted}</td>
@@ -370,7 +372,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
                 <tr>
                   <td style="padding: 20px;">
-                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💬 Customer Message</h3>
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">?? Customer Message</h3>
                     <div style="background-color: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 4px; color: #1a1a1a; line-height: 1.6;">
                       ${message.replace(/\n/g, '<br>')}
                     </div>
@@ -384,7 +386,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
                 <tr>
                   <td style="padding: 20px;">
-                    <h3 style="color: #1a1a1a; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📸 Diamond Image</h3>
+                    <h3 style="color: #1a1a1a; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">?? Diamond Image</h3>
                     <img src="${diamond.image}" alt="${diamond.name}" style="max-width: 100%; height: auto; border-radius: 8px; display: block;">
                   </td>
                 </tr>
@@ -395,7 +397,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="background-color: #fff4cc; border: 1px solid #f59e0b; padding: 16px; text-align: center; color: #1a1a1a; font-weight: 600; border-radius: 8px;">
-                    ⏰ Please respond to this inquiry within 24 hours
+                    ? Please respond to this inquiry within 24 hours
                   </td>
                 </tr>
               </table>
@@ -431,17 +433,17 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #e8eaf0; padding: 30px 15px;">
     <tr>
       <td align="center">
-        <table width="650" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <table width="650" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); padding: 35px 25px; text-align: center;">
               ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" style="max-width: 160px; height: auto; margin-bottom: 15px;">` : ''}
-              <h1 style="margin: 0; font-size: 28px; color: #ffffff; font-weight: 600;">✨ Thank You for Your Inquiry</h1>
+              <h1 style="margin: 0; font-size: 28px; color: #ffffff; font-weight: 600;">? Thank You for Your Inquiry</h1>
             </td>
           </tr>
           <!-- Content -->
           <tr>
-            <td style="padding: 35px 30px; background-color: #ffffff;">
+            <td style="padding: 35px 30px; background-color: #fafafa;">
               <p style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px;">Dear <strong>${customer.name}</strong>,</p>
               <p style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px;">Thank you for your interest in our diamond. We have received your inquiry and our team will get back to you shortly.</p>
               
@@ -449,8 +451,8 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
                 <tr>
                   <td style="padding: 20px;">
-                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💎 Your Inquiry Details</h3>
-                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px;">
+                    <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">?? Your Inquiry Details</h3>
+                    <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 6px;">
                       <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Diamond</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.name}</td></tr>
                       <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">SKU</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.sku}</td></tr>
                       <tr><td style="font-weight: 600; color: #4a5568; background-color: #f5f7fa; border-bottom: 1px solid #d5dae0;">Shape</td><td style="color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${diamond.shape || 'N/A'}</td></tr>
@@ -470,7 +472,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px; background-color: #f5f7fa; border-radius: 8px; border: 1px solid #e1e4e8;">
                 <tr>
                   <td style="padding: 20px;">
-                    <h3 style="color: #1a1a1a; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📸 Diamond Image</h3>
+                    <h3 style="color: #1a1a1a; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">?? Diamond Image</h3>
                     <img src="${diamond.image}" alt="${diamond.name}" style="max-width: 100%; height: auto; border-radius: 8px;">
                   </td>
                 </tr>
@@ -481,7 +483,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
                 <tr>
                   <td style="background-color: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 4px;">
-                    <p style="margin: 0; color: #1a1a1a;"><strong>⏰ Response Time:</strong> We will review your inquiry and contact you within <strong>24 hours</strong>.</p>
+                    <p style="margin: 0; color: #1a1a1a;"><strong>? Response Time:</strong> We will review your inquiry and contact you within <strong>24 hours</strong>.</p>
                   </td>
                 </tr>
               </table>
@@ -516,7 +518,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
                 await emailTransporter.sendMail({
                     from: `"Diamond Inquiry" <${fromEmail}>`,
                     to: ownerEmail,
-                    subject: `🔷 New Diamond Inquiry - ${diamond.name}`,
+                    subject: `?? New Diamond Inquiry - ${diamond.name}`,
                     html: ownerEmailHTML
                 });
                 console.log('Owner email sent successfully');
@@ -525,7 +527,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
                 await emailTransporter.sendMail({
                     from: `"Diamond Store" <${fromEmail}>`,
                     to: customer.email,
-                    subject: `✨ Your Diamond Inquiry - ${diamond.name}`,
+                    subject: `? Your Diamond Inquiry - ${diamond.name}`,
                     html: customerEmailHTML
                 });
                 console.log('Customer email sent successfully');
@@ -649,13 +651,13 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
   <div class="email-container">
     <div class="header">
       ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="logo">` : ''}
-      <h1>💎 New Diamond Inquiry</h1>
-      <p>${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} • Total Value: ${totalValueFormatted}</p>
+      <h1>?? New Diamond Inquiry</h1>
+      <p>${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} � Total Value: ${totalValueFormatted}</p>
     </div>
     
     <div class="content">
       <div class="section">
-        <div class="section-title">👤 Customer Information</div>
+        <div class="section-title">?? Customer Information</div>
         <table class="info-table">
           <tr><td>Name</td><td>${customer.name}</td></tr>
           <tr><td>Email Address</td><td><a href="mailto:${customer.email}">${customer.email}</a></td></tr>
@@ -664,9 +666,9 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
       </div>
 
       <div class="section">
-        <div class="section-title">💎 Diamond Details</div>
+        <div class="section-title">?? Diamond Details</div>
         <p style="color: #6c757d; font-size: 14px; margin-bottom: 15px;">
-          <strong>💡 Tip:</strong> Click on diamond names to view complete details on your website
+          <strong>?? Tip:</strong> Click on diamond names to view complete details on your website
         </p>
         <table class="diamond-table">
           <thead>
@@ -694,13 +696,13 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
 
       ${message ? `
       <div class="section">
-        <div class="section-title">💬 Customer Message</div>
+        <div class="section-title">?? Customer Message</div>
         <div class="message-box">${message.replace(/\n/g, '<br>')}</div>
       </div>
       ` : ''}
 
       <div class="action-note">
-        ⏰ Please respond to this inquiry within 24 hours
+        ? Please respond to this inquiry within 24 hours
       </div>
     </div>
     
@@ -716,12 +718,12 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
         // Customer Email HTML - Diamond table rows
         const customerDiamondRows = diamonds.map(d => `
           <tr>
-            <td style="padding: 14px 10px; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.index}</td>
-            <td style="padding: 14px 10px; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.name}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.shape}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.size}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.color}-${d.clarity}</td>
-            <td style="padding: 14px 10px; text-align: right; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #ffffff;">${d.priceFormatted}</td>
+            <td style="padding: 14px 10px; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #fafafa;">${d.index}</td>
+            <td style="padding: 14px 10px; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #fafafa;">${d.name}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #fafafa;">${d.shape}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #fafafa;">${d.size}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #fafafa;">${d.color}-${d.clarity}</td>
+            <td style="padding: 14px 10px; text-align: right; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0; background-color: #fafafa;">${d.priceFormatted}</td>
           </tr>
         `).join('');
 
@@ -735,17 +737,17 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #e8eaf0; padding: 30px 15px;">
     <tr>
       <td align="center">
-        <table width="700" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <table width="700" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); padding: 35px 25px; text-align: center;">
               ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" style="max-width: 160px; height: auto; margin-bottom: 15px;">` : ''}
-              <h1 style="margin: 0; font-size: 28px; color: #ffffff; font-weight: 600;">✨ Thank You for Your Inquiry</h1>
+              <h1 style="margin: 0; font-size: 28px; color: #ffffff; font-weight: 600;">? Thank You for Your Inquiry</h1>
             </td>
           </tr>
           <!-- Content -->
           <tr>
-            <td style="padding: 35px 30px; background-color: #ffffff;">
+            <td style="padding: 35px 30px; background-color: #fafafa;">
               <p style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px;">Dear <strong>${customer.name}</strong>,</p>
               <p style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px;">Thank you for your interest in our diamond collection. We have received your inquiry for <strong>${diamonds.length} diamond${diamonds.length > 1 ? 's' : ''}</strong> and our team will contact you shortly.</p>
               
@@ -754,10 +756,10 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
                 <tr>
                   <td style="padding: 20px;">
                     <h3 style="color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">
-                      💎 Selected Diamond${diamonds.length > 1 ? 's' : ''} 
+                      ?? Selected Diamond${diamonds.length > 1 ? 's' : ''} 
                       <span style="display: inline-block; background-color: ${brandColor}; color: #ffffff; padding: 5px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 10px;">${diamonds.length} Item${diamonds.length > 1 ? 's' : ''}</span>
                     </h3>
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 6px; font-size: 13px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 6px; font-size: 13px;">
                       <thead>
                         <tr>
                           <th style="padding: 12px 10px; text-align: left; font-weight: 600; color: #1a1a1a; background-color: #d5dae0; border-bottom: 2px solid ${brandColor}; width: 40px;">#</th>
@@ -784,7 +786,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
                 <tr>
                   <td style="background-color: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 4px;">
-                    <p style="margin: 0; color: #1a1a1a;"><strong>⏰ Response Time:</strong> Our diamond specialist will review your inquiry and contact you within <strong>24 hours</strong>.</p>
+                    <p style="margin: 0; color: #1a1a1a;"><strong>? Response Time:</strong> Our diamond specialist will review your inquiry and contact you within <strong>24 hours</strong>.</p>
                   </td>
                 </tr>
               </table>
@@ -819,7 +821,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
                 await emailTransporter.sendMail({
                     from: `"Diamond Inquiry" <${fromEmail}>`,
                     to: ownerEmail,
-                    subject: `💎 New Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} (${totalValueFormatted})`,
+                    subject: `?? New Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} (${totalValueFormatted})`,
                     html: ownerEmailHTML
                 });
                 console.log('Owner wishlist email sent successfully');
@@ -828,7 +830,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
                 await emailTransporter.sendMail({
                     from: `"Diamond Store" <${fromEmail}>`,
                     to: customer.email,
-                    subject: `✨ Thank You for Your Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''}`,
+                    subject: `? Thank You for Your Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''}`,
                     html: customerEmailHTML
                 });
                 console.log('Customer wishlist email sent successfully');
@@ -1019,10 +1021,11 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log('Environment check:');
-    console.log('- CLIENT_ID:', process.env.CLIENT_ID ? 'Set ✓' : 'Missing ✗');
-    console.log('- CLIENT_SECRET:', process.env.CLIENT_SECRET ? 'Set ✓' : 'Missing ✗');
+    console.log('- CLIENT_ID:', process.env.CLIENT_ID ? 'Set ?' : 'Missing ?');
+    console.log('- CLIENT_SECRET:', process.env.CLIENT_SECRET ? 'Set ?' : 'Missing ?');
     console.log('- PORT:', PORT);
     console.log('\nAPI Endpoints:');
     console.log('- POST /api/diamonds/search');
     console.log('- GET  /api/health');
 });
+
