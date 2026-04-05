@@ -390,68 +390,66 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
           </tr>
         `).join('');
 
-        // Get branding and store URL from environment variables
-        const storeUrl = process.env.STORE_URL || 'https://yourstore.com';
-        const brandName = process.env.BRAND_NAME || 'Diamond Store';
-        const brandLogo = process.env.BRAND_LOGO_URL || '';
-        const brandColor = process.env.BRAND_COLOR || '#667eea';
-
-        // Owner Email HTML - Classic Professional Design
+        // Owner Email HTML - Modern Professional Design
         const ownerEmailHTML = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <style>
-    body { font-family: 'Times New Roman', Times, serif; line-height: 1.6; color: #000; margin: 0; padding: 0; background: #f4f4f4; }
-    .email-container { max-width: 900px; margin: 20px auto; background: #ffffff; border: 2px solid #333; }
-    .header { background: #ffffff; padding: 30px; text-align: center; border-bottom: 3px double #333; }
-    .logo { max-width: 200px; margin-bottom: 15px; }
-    .header h1 { margin: 0; font-size: 24px; color: #000; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
-    .header p { margin: 10px 0 0 0; font-size: 14px; color: #666; }
-    .content { padding: 30px; background: #fff; }
-    .section { margin-bottom: 30px; }
-    .section-title { font-size: 16px; font-weight: bold; color: #000; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    .info-table td { padding: 12px; border-bottom: 1px solid #ddd; color: #000; }
-    .info-table td:first-child { font-weight: bold; width: 180px; color: #000; }
-    .diamond-table { width: 100%; border-collapse: collapse; margin-top: 15px; border: 1px solid #000; }
-    .diamond-table th { background: #f8f8f8; padding: 12px 10px; text-align: left; font-weight: bold; color: #000; border-bottom: 2px solid #000; font-size: 13px; }
-    .diamond-table td { padding: 15px 10px; border-bottom: 1px solid #ddd; color: #000; }
-    .total-row { background: #f8f8f8; font-weight: bold; font-size: 16px; border-top: 2px solid #000; }
-    .total-row td { padding: 15px 10px; color: #000; }
-    .message-box { background: #f9f9f9; padding: 20px; border-left: 4px solid #333; margin: 15px 0; color: #000; }
-    .footer { background: #f8f8f8; padding: 20px; text-align: center; border-top: 2px solid #333; color: #666; font-size: 12px; }
-    .action-note { background: #fffbea; border: 1px solid #e6c300; padding: 15px; text-align: center; color: #000; font-weight: bold; margin-top: 20px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background: #f5f7fa; }
+    .email-container { max-width: 900px; margin: 30px auto; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
+    .header { background: linear-gradient(135deg, ${brandColor} 0%, #667eea 100%); color: white; padding: 40px 30px; text-align: center; }
+    .logo { max-width: 180px; margin-bottom: 20px; }
+    .header h1 { margin: 0; font-size: 28px; color: white; font-weight: 600; letter-spacing: -0.5px; }
+    .header p { margin: 12px 0 0 0; font-size: 15px; color: rgba(255,255,255,0.9); font-weight: 400; }
+    .content { padding: 40px; background: #fff; }
+    .section { margin-bottom: 35px; }
+    .section-title { font-size: 18px; font-weight: 600; color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin-bottom: 20px; }
+    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #f8f9fa; border-radius: 8px; overflow: hidden; }
+    .info-table td { padding: 14px 20px; border-bottom: 1px solid #e9ecef; color: #1a1a1a; }
+    .info-table td:first-child { font-weight: 600; width: 180px; color: #495057; }
+    .info-table tr:last-child td { border-bottom: none; }
+    .diamond-table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .diamond-table th { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 14px 12px; text-align: left; font-weight: 600; color: #1a1a1a; font-size: 13px; border-bottom: 2px solid ${brandColor}; }
+    .diamond-table td { padding: 16px 12px; border-bottom: 1px solid #e9ecef; color: #1a1a1a; background: #fff; }
+    .diamond-table tr:hover td { background: #f8f9fa; }
+    .total-row { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); font-weight: 600; font-size: 16px; }
+    .total-row td { padding: 16px 12px; color: #1a1a1a; border-top: 2px solid ${brandColor}; border-bottom: none; }
+    .message-box { background: #f8f9fa; padding: 20px; border-left: 4px solid ${brandColor}; margin: 15px 0; color: #1a1a1a; border-radius: 4px; }
+    .footer { background: #f8f9fa; padding: 25px; text-align: center; color: #6c757d; font-size: 13px; }
+    .action-note { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border: 1px solid #ffc107; padding: 16px; text-align: center; color: #1a1a1a; font-weight: 600; margin-top: 25px; border-radius: 8px; }
+    a { color: ${brandColor}; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <div class="email-container">
     <div class="header">
-      ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="logo">` : `<h1 style="margin: 0;">${brandName}</h1>`}
-      <h1>Diamond Inquiry</h1>
+      ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="logo">` : ''}
+      <h1>💎 New Diamond Inquiry</h1>
       <p>${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} • Total Value: ${totalValueFormatted}</p>
     </div>
     
     <div class="content">
       <div class="section">
-        <div class="section-title">Customer Information</div>
+        <div class="section-title">👤 Customer Information</div>
         <table class="info-table">
-          <tr><td>Name:</td><td>${customer.name}</td></tr>
-          <tr><td>Email Address:</td><td><a href="mailto:${customer.email}" style="color: #1a5490;">${customer.email}</a></td></tr>
-          <tr><td>Phone Number:</td><td><a href="tel:${customer.phone}" style="color: #1a5490;">${customer.phone}</a></td></tr>
+          <tr><td>Name</td><td>${customer.name}</td></tr>
+          <tr><td>Email Address</td><td><a href="mailto:${customer.email}">${customer.email}</a></td></tr>
+          <tr><td>Phone Number</td><td><a href="tel:${customer.phone}">${customer.phone}</a></td></tr>
         </table>
       </div>
 
       <div class="section">
-        <div class="section-title">Diamond Details</div>
-        <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
-          <strong>Note:</strong> Click on diamond names to view complete details on your website
+        <div class="section-title">💎 Diamond Details</div>
+        <p style="color: #6c757d; font-size: 14px; margin-bottom: 15px;">
+          <strong>💡 Tip:</strong> Click on diamond names to view complete details on your website
         </p>
         <table class="diamond-table">
           <thead>
             <tr>
-              <th style="text-align: center;">#</th>
+              <th style="text-align: center; width: 40px;">#</th>
               <th>Diamond (Click to View)</th>
               <th style="text-align: center;">SKU / Stock #</th>
               <th style="text-align: center;">Shape</th>
@@ -465,7 +463,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
           <tbody>
             ${diamondRows}
             <tr class="total-row">
-              <td colspan="8" style="text-align: right;">TOTAL INQUIRY VALUE:</td>
+              <td colspan="8" style="text-align: right;">TOTAL INQUIRY VALUE</td>
               <td style="text-align: right;">${totalValueFormatted}</td>
             </tr>
           </tbody>
@@ -474,7 +472,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
 
       ${message ? `
       <div class="section">
-        <div class="section-title">Customer Message</div>
+        <div class="section-title">💬 Customer Message</div>
         <div class="message-box">${message.replace(/\n/g, '<br>')}</div>
       </div>
       ` : ''}
@@ -485,8 +483,8 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
     </div>
     
     <div class="footer">
-      <p style="margin: 0; color: #000; font-weight: bold;">${brandName}</p>
-      <p style="margin: 5px 0 0 0;"><a href="${storeUrl}" style="color: #1a5490;">${storeUrl}</a></p>
+      <p style="margin: 0; color: #1a1a1a; font-weight: 600; font-size: 14px;">${brandName}</p>
+      <p style="margin: 8px 0 0 0;"><a href="${storeUrl}">${storeUrl}</a></p>
     </div>
   </div>
 </body>
