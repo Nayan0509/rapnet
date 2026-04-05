@@ -506,7 +506,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
     .header { background: linear-gradient(135deg, ${brandColor} 0%, #667eea 100%); color: #000000; padding: 40px 30px; text-align: center; }
     .logo { max-width: 180px; margin-bottom: 20px; }
     .header h1 { margin: 0; font-size: 28px; color: #000000; font-weight: 600; letter-spacing: -0.5px; }
-    .header p { margin: 12px 0 0 0; font-size: 15px; color: rgba(255,255,255,0.9); font-weight: 400; }
+    .header p { margin: 12px 0 0 0; font-size: 15px; color: rgb(0 0 0 / 90%); font-weight: 400; }
     .content { padding: 40px; background: #fff; }
     .section { margin-bottom: 35px; }
     .section-title { font-size: 18px; font-weight: 600; color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin-bottom: 20px; }
