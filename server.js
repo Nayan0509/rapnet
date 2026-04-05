@@ -104,7 +104,7 @@ app.post('/api/diamonds/search', async (req, res) => {
 const diamondCache = new Map();
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-// API endpoint to get diamond by ID (for direct links)
+// API endpoint to get diamond by ID using SingleDiamond API
 app.get('/api/diamonds/get-by-id/:diamondId', async (req, res) => {
     try {
         const { diamondId } = req.params;
@@ -114,67 +114,65 @@ app.get('/api/diamonds/get-by-id/:diamondId', async (req, res) => {
         const cached = diamondCache.get(diamondId);
         if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
             console.log('Returning cached diamond');
-            return res.json({ diamond: cached.data });
+            return res.json({ diamond: cached.data, seller: cached.seller });
         }
 
         const token = await getAccessToken();
 
-        // Search with broader parameters to increase chances of finding the diamond
-        // We'll search multiple pages if needed
-        const searchParams = {
-            search_type: 'White',
-            shapes: [],
-            sizes: [],
-            colors: [],
-            clarities: [],
-            cuts: [],
-            polishes: [],
-            symmetries: [],
-            labs: [],
-            fluorescence_intensities: [],
-            page_number: 1,
-            page_size: 100, // Increased page size
-            sort_by: 'price',
-            sort_direction: 'Asc'
-        };
-
-        // Try to find the diamond in multiple pages (up to 5 pages = 500 diamonds)
-        let diamond = null;
-        for (let page = 1; page <= 5 && !diamond; page++) {
-            searchParams.page_number = page;
-            console.log(`Searching page ${page} for diamond ${diamondId}...`);
-
-            const response = await axios.post(
-                'https://technet.rapnetapis.com/instant-inventory/api/Diamonds',
-                { request: { body: searchParams } },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+        // Use SingleDiamond API endpoint
+        const response = await axios.post(
+            'https://technet.rapnetapis.com/instant-inventory/api/SingleDiamond',
+            {
+                request: {
+                    header: {},
+                    body: {
+                        diamond_id: parseInt(diamondId)
                     }
                 }
-            );
-
-            // Find the diamond with matching ID
-            if (response.data && response.data.response && response.data.response.body && response.data.response.body.diamonds) {
-                diamond = response.data.response.body.diamonds.find(d =>
-                    d.diamond_id == diamondId || d.stock_num == diamondId
-                );
-
-                if (diamond) {
-                    console.log(`Found diamond on page ${page}`);
-                    // Cache the diamond for future requests
-                    diamondCache.set(diamondId, {
-                        data: diamond,
-                        timestamp: Date.now()
-                    });
-                    return res.json({ diamond: diamond });
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
+            }
+        );
+
+        // Check if response is successful
+        if (response.data && response.data.response) {
+            const { header, body } = response.data.response;
+
+            // Check for errors in response
+            if (header.error_code !== 0) {
+                console.log('API returned error:', header.error_message);
+                return res.status(404).json({
+                    error: 'Diamond not found',
+                    message: header.error_message || 'This diamond may no longer be available.'
+                });
+            }
+
+            if (body && body.diamond) {
+                const diamond = body.diamond;
+                const seller = body.seller;
+
+                console.log('Diamond found via SingleDiamond API');
+
+                // Cache the diamond for future requests
+                diamondCache.set(diamondId, {
+                    data: diamond,
+                    seller: seller,
+                    timestamp: Date.now()
+                });
+
+                return res.json({
+                    diamond: diamond,
+                    seller: seller
+                });
             }
         }
 
-        // Diamond not found after searching multiple pages
-        console.log('Diamond not found after searching 5 pages');
+        // Diamond not found
+        console.log('Diamond not found in API response');
         res.status(404).json({
             error: 'Diamond not found',
             message: 'This diamond may no longer be available. Please search for similar diamonds.'
