@@ -335,25 +335,25 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
 <head>
   <meta charset="UTF-8">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #2c3e50; margin: 0; padding: 0; background: #f0f2f5; }
-    .email-wrapper { background: #f0f2f5; padding: 30px 15px; }
-    .container { max-width: 650px; margin: 0 auto; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background: #e8eaf0; }
+    .email-wrapper { background: #e8eaf0; padding: 30px 15px; }
+    .container { max-width: 650px; margin: 0 auto; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; }
     .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: #ffffff; padding: 35px 25px; text-align: center; }
     ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
     .header h1 { margin: 0; font-size: 28px; color: #ffffff; font-weight: 600; }
     .content { background: #ffffff; padding: 35px 30px; }
-    .content p { color: #2c3e50; margin: 0 0 16px 0; }
-    .section { margin-bottom: 30px; background: #f8f9fb; padding: 20px; border-radius: 8px; }
-    .section h3 { color: #2c3e50; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; }
-    table { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 6px; overflow: hidden; }
-    td { padding: 12px 15px; border-bottom: 1px solid #e8ecef; color: #2c3e50; }
-    td:first-child { font-weight: 600; width: 45%; color: #5a6c7d; background: #f8f9fb; }
-    td:last-child { color: #2c3e50; }
+    .content p { color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px; }
+    .section { margin-bottom: 30px; background: #f5f7fa; padding: 20px; border-radius: 8px; border: 1px solid #e1e4e8; }
+    .section h3 { color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    td { padding: 12px 15px; border-bottom: 1px solid #d5dae0; color: #1a1a1a; }
+    td:first-child { font-weight: 600; width: 45%; color: #4a5568; background: #f5f7fa; }
+    td:last-child { color: #1a1a1a; }
     tr:last-child td { border-bottom: none; }
     .diamond-image { max-width: 100%; height: auto; margin-top: 15px; border-radius: 8px; }
-    .footer { text-align: center; padding: 30px 25px; background: #f8f9fb; }
-    .footer p { color: #5a6c7d; margin: 5px 0; }
-    .highlight-box { background: #fff9e6; border-left: 4px solid #ffc107; padding: 16px; margin: 20px 0; color: #2c3e50; border-radius: 4px; }
+    .footer { text-align: center; padding: 30px 25px; background: #f5f7fa; border-top: 1px solid #e1e4e8; }
+    .footer p { color: #4a5568; margin: 5px 0; }
+    .highlight-box { background: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; color: #1a1a1a; border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -379,7 +379,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
             <tr><td>Cut</td><td>${diamond.cut || 'N/A'}</td></tr>
             <tr><td>Price per unit</td><td>${diamond.priceFormatted}</td></tr>
             <tr><td>Quantity</td><td>${quantity}</td></tr>
-            <tr><td style="background: #e8ecef; font-weight: 700;">Total</td><td style="font-weight: 700; color: ${brandColor};">${totalPriceFormatted}</td></tr>
+            <tr><td style="background: #d5dae0; font-weight: 700;">Total</td><td style="font-weight: 700; color: #1a1a1a;">${totalPriceFormatted}</td></tr>
           </table>
         </div>
 
@@ -397,7 +397,7 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
         <p style="margin-top: 20px;">If you have any urgent questions, please feel free to contact us directly.</p>
       </div>
       <div class="footer">
-        <p style="margin: 0; font-size: 16px; color: #2c3e50; font-weight: 600;">Best regards,</p>
+        <p style="margin: 0; font-size: 16px; color: #1a1a1a; font-weight: 600;">Best regards,</p>
         <p style="margin: 8px 0 0 0; color: ${brandColor}; font-weight: 600; font-size: 15px;">${brandName} Team</p>
         <p style="margin: 15px 0 0 0; font-size: 12px;">
           <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
@@ -618,12 +618,12 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
         // Customer Email HTML - Diamond table rows
         const customerDiamondRows = diamonds.map(d => `
           <tr style="background: #ffffff;">
-            <td style="padding: 14px 10px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e8ecef;">${d.index}</td>
-            <td style="padding: 14px 10px; color: #2c3e50; border-bottom: 1px solid #e8ecef;">${d.name}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #2c3e50; border-bottom: 1px solid #e8ecef;">${d.shape}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #2c3e50; border-bottom: 1px solid #e8ecef;">${d.size}</td>
-            <td style="padding: 14px 10px; text-align: center; color: #2c3e50; border-bottom: 1px solid #e8ecef;">${d.color}-${d.clarity}</td>
-            <td style="padding: 14px 10px; text-align: right; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e8ecef;">${d.priceFormatted}</td>
+            <td style="padding: 14px 10px; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.index}</td>
+            <td style="padding: 14px 10px; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.name}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.shape}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.size}</td>
+            <td style="padding: 14px 10px; text-align: center; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.color}-${d.clarity}</td>
+            <td style="padding: 14px 10px; text-align: right; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #d5dae0;">${d.priceFormatted}</td>
           </tr>
         `).join('');
 
@@ -633,25 +633,25 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
 <head>
   <meta charset="UTF-8">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #2c3e50; margin: 0; padding: 0; background: #f0f2f5; }
-    .email-wrapper { background: #f0f2f5; padding: 30px 15px; }
-    .container { max-width: 700px; margin: 0 auto; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; margin: 0; padding: 0; background: #e8eaf0; }
+    .email-wrapper { background: #e8eaf0; padding: 30px 15px; }
+    .container { max-width: 700px; margin: 0 auto; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; }
     .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: #ffffff; padding: 35px 25px; text-align: center; }
     ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
     .header h1 { margin: 0; font-size: 28px; color: #ffffff; font-weight: 600; }
     .content { background: #ffffff; padding: 35px 30px; }
-    .content p { color: #2c3e50; margin: 0 0 16px 0; }
-    .section { margin-bottom: 30px; background: #f8f9fb; padding: 20px; border-radius: 8px; }
-    .section h3 { color: #2c3e50; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; }
-    .diamond-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; background: #ffffff; border-radius: 6px; overflow: hidden; }
-    .diamond-table th { background: #e8ecef; padding: 12px 10px; text-align: left; font-weight: 600; color: #2c3e50; border-bottom: 2px solid ${brandColor}; }
-    .diamond-table td { color: #2c3e50; }
-    .total-row { background: #e8ecef; font-weight: 700; font-size: 15px; }
-    .total-row td { padding: 14px 10px; border-top: 2px solid ${brandColor}; color: #2c3e50; border-bottom: none; }
-    .footer { text-align: center; padding: 30px 25px; background: #f8f9fb; }
-    .footer p { color: #5a6c7d; margin: 5px 0; }
+    .content p { color: #1a1a1a; margin: 0 0 16px 0; font-size: 15px; }
+    .section { margin-bottom: 30px; background: #f5f7fa; padding: 20px; border-radius: 8px; border: 1px solid #e1e4e8; }
+    .section h3 { color: #1a1a1a; border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin: 0 0 20px 0; font-size: 18px; font-weight: 600; }
+    .diamond-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; background: #ffffff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .diamond-table th { background: #d5dae0; padding: 12px 10px; text-align: left; font-weight: 600; color: #1a1a1a; border-bottom: 2px solid ${brandColor}; }
+    .diamond-table td { color: #1a1a1a; }
+    .total-row { background: #d5dae0; font-weight: 700; font-size: 15px; }
+    .total-row td { padding: 14px 10px; border-top: 2px solid ${brandColor}; color: #1a1a1a; border-bottom: none; }
+    .footer { text-align: center; padding: 30px 25px; background: #f5f7fa; border-top: 1px solid #e1e4e8; }
+    .footer p { color: #4a5568; margin: 5px 0; }
     .badge { display: inline-block; background: ${brandColor}; color: #ffffff; padding: 5px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-    .highlight-box { background: #fff9e6; border-left: 4px solid #ffc107; padding: 16px; margin: 20px 0; color: #2c3e50; border-radius: 4px; }
+    .highlight-box { background: #fff4cc; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; color: #1a1a1a; border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -682,7 +682,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
               ${customerDiamondRows}
               <tr class="total-row">
                 <td colspan="5" style="text-align: right; font-weight: 700;">TOTAL VALUE:</td>
-                <td style="text-align: right; color: ${brandColor}; font-weight: 700;">${totalValueFormatted}</td>
+                <td style="text-align: right; color: #1a1a1a; font-weight: 700;">${totalValueFormatted}</td>
               </tr>
             </tbody>
           </table>
@@ -695,7 +695,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
         <p style="margin-top: 20px;">For immediate assistance, please feel free to contact us directly.</p>
       </div>
       <div class="footer">
-        <p style="margin: 0; font-size: 16px; color: #2c3e50; font-weight: 600;">Best regards,</p>
+        <p style="margin: 0; font-size: 16px; color: #1a1a1a; font-weight: 600;">Best regards,</p>
         <p style="margin: 8px 0 0 0; color: ${brandColor}; font-weight: 600; font-size: 15px;">${brandName} Team</p>
         <p style="margin: 15px 0 0 0; font-size: 12px;">
           <a href="${storeUrl}" style="color: ${brandColor}; text-decoration: none;">${storeUrl}</a>
