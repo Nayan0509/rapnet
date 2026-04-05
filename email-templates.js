@@ -1,17 +1,17 @@
 // Modern Email Templates with Dark Mode Support for Diamond Inquiry System
 
 function generateOwnerEmail({ customer, diamond, quantity, totalPriceFormatted, message, brandName, brandLogo, brandColor, storeUrl, diamondViewUrl }) {
-    const inquiryId = Date.now();
-    const inquiryDate = new Date().toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    });
+  const inquiryId = Date.now();
+  const inquiryDate = new Date().toLocaleString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  });
 
-    return `
+  return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -186,7 +186,7 @@ function generateOwnerEmail({ customer, diamond, quantity, totalPriceFormatted, 
 }
 
 function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatted, brandName, brandLogo, brandColor, storeUrl, diamondViewUrl }) {
-    return `
+  return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -222,58 +222,21 @@ function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatte
           <tr>
             <td style="padding: 30px 40px;">
               <p style="margin: 0 0 10px 0; font-size: 14px; color: #1a1a1a;">Dear <strong>${customer.name}</strong>,</p>
-              <p style="margin: 0 0 30px 0; font-size: 14px; color: #666666; line-height: 1.6;">Thank you for your interest in our diamond collection. We have received your inquiry and our team will contact you shortly.</p>
+              <p style="margin: 0 0 30px 0; font-size: 14px; color: #666666; line-height: 1.6;">Thank you for your interest in our diamonds. We have received your inquiry for <strong>1 diamond</strong> and our team will get back to you shortly.</p>
               
-              <!-- Customer Information -->
+              <!-- Your Selected Diamonds -->
               <h2 style="margin: 0 0 20px 0; font-size: 15px; font-weight: 600; color: #1a1a1a;">
-                <span style="color: #4A90E2; margin-right: 8px;">👤</span>Customer Information
+                <span style="color: #4A90E2; margin-right: 8px;">�</span>Your Selected Diamonds
               </h2>
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafafa; border-radius: 6px; margin-bottom: 30px;">
-                <tr>
-                  <td style="padding: 15px 20px; border-bottom: 1px solid #e8e8e8; width: 35%;">
-                    <span style="font-size: 13px; color: #666666;">Name</span>
-                  </td>
-                  <td style="padding: 15px 20px; border-bottom: 1px solid #e8e8e8;">
-                    <span style="font-size: 14px; color: #1a1a1a; font-weight: 500;">${customer.name}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 15px 20px; border-bottom: 1px solid #e8e8e8;">
-                    <span style="font-size: 13px; color: #666666;">Email Address</span>
-                  </td>
-                  <td style="padding: 15px 20px; border-bottom: 1px solid #e8e8e8;">
-                    <a href="mailto:${customer.email}" style="font-size: 14px; color: #4A90E2; text-decoration: none;">${customer.email}</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 15px 20px;">
-                    <span style="font-size: 13px; color: #666666;">Phone Number</span>
-                  </td>
-                  <td style="padding: 15px 20px;">
-                    <a href="tel:${customer.phone}" style="font-size: 14px; color: #4A90E2; text-decoration: none;">${customer.phone}</a>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Diamond Details -->
-              <h2 style="margin: 0 0 15px 0; font-size: 15px; font-weight: 600; color: #1a1a1a;">
-                <span style="color: #4A90E2; margin-right: 8px;">💎</span>Diamond Details
-              </h2>
-              <p style="margin: 0 0 15px 0; font-size: 12px; color: #f39c12; background-color: #fff9e6; padding: 10px 15px; border-radius: 4px; border-left: 3px solid #f39c12;">
-                💡 Tip: Click on diamond names to view complete details on your website
-              </p>
               
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #e8e8e8; border-radius: 6px; overflow: hidden; margin-bottom: 25px;">
                 <thead>
                   <tr style="background-color: #fafafa;">
                     <th style="padding: 12px 15px; text-align: left; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8; width: 5%;">#</th>
-                    <th style="padding: 12px 15px; text-align: left; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Diamond (Click to View)</th>
-                    <th style="padding: 12px 15px; text-align: center; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">SKU / Stock #</th>
+                    <th style="padding: 12px 15px; text-align: left; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Diamond</th>
                     <th style="padding: 12px 15px; text-align: center; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Shape</th>
                     <th style="padding: 12px 15px; text-align: center; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Carat</th>
-                    <th style="padding: 12px 15px; text-align: center; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Color</th>
-                    <th style="padding: 12px 15px; text-align: center; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Clarity</th>
-                    <th style="padding: 12px 15px; text-align: center; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Cut</th>
+                    <th style="padding: 12px 15px; text-align: center; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Grade</th>
                     <th style="padding: 12px 15px; text-align: right; font-size: 11px; font-weight: 600; color: #666666; text-transform: uppercase; border-bottom: 1px solid #e8e8e8;">Price</th>
                   </tr>
                 </thead>
@@ -281,37 +244,33 @@ function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatte
                   <tr>
                     <td style="padding: 15px; text-align: center; font-size: 14px; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">1</td>
                     <td style="padding: 15px; border-bottom: 1px solid #e8e8e8;">
-                      <a href="${diamondViewUrl}" style="color: #4A90E2; text-decoration: underline; font-weight: 500; font-size: 13px;" target="_blank">${diamond.name}</a>
-                      ${diamond.lab ? `<div style="font-size: 11px; color: #999999; margin-top: 3px;">Certificate: ${diamond.lab}${diamond.cert_num ? ` #${diamond.cert_num}` : ''}</div>` : ''}
+                      <div style="font-weight: 500; font-size: 13px; color: #1a1a1a; margin-bottom: 3px;">${diamond.name}</div>
+                      ${diamond.lab ? `<div style="font-size: 11px; color: #999999;">Certificate: ${diamond.lab}${diamond.cert_num ? ` #${diamond.cert_num}` : ''}</div>` : ''}
                     </td>
-                    <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; font-weight: 600; border-bottom: 1px solid #e8e8e8;">${diamond.sku || 'N/A'}</td>
                     <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">${diamond.shape || 'N/A'}</td>
-                    <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">${diamond.size || 'N/A'}</td>
-                    <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">${diamond.color || 'N/A'}</td>
-                    <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">${diamond.clarity || 'N/A'}</td>
-                    <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">${diamond.cut || 'N/A'}</td>
-                    <td style="padding: 15px; text-align: right; font-size: 14px; font-weight: 600; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">${diamond.priceFormatted}</td>
+                    <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; font-weight: 600; border-bottom: 1px solid #e8e8e8;">${diamond.size || 'N/A'}</td>
+                    <td style="padding: 15px; text-align: center; font-size: 13px; color: #1a1a1a; border-bottom: 1px solid #e8e8e8;">${diamond.color || 'N/A'}-${diamond.clarity || 'N/A'}</td>
+                    <td style="padding: 15px; text-align: right; font-size: 14px; font-weight: 600; color: #f39c12; border-bottom: 1px solid #e8e8e8;">${diamond.priceFormatted}</td>
                   </tr>
                   <tr style="background-color: #fafafa;">
-                    <td colspan="8" style="padding: 15px; text-align: right; font-size: 13px; font-weight: 600; color: #1a1a1a;">TOTAL INQUIRY VALUE</td>
+                    <td colspan="5" style="padding: 15px; text-align: right; font-size: 13px; font-weight: 700; color: #1a1a1a; text-transform: uppercase;">TOTAL VALUE:</td>
                     <td style="padding: 15px; text-align: right; font-size: 16px; font-weight: 700; color: #1a1a1a;">${totalPriceFormatted}</td>
                   </tr>
                 </tbody>
               </table>
 
-              <!-- Response Notice -->
-              <div style="background-color: #fff9e6; border: 1px solid #f39c12; border-radius: 6px; padding: 15px 20px; text-align: center; margin-bottom: 25px;">
-                <p style="margin: 0; font-size: 13px; color: #856404;">⏰ Please respond to this inquiry within 24 hours</p>
-              </div>
-
-              <p style="margin: 0; font-size: 14px; color: #666666;">For immediate assistance, please feel free to contact us directly.</p>
+              <!-- Response Time Notice -->
+              <p style="margin: 0 0 15px 0; font-size: 14px; color: #666666; line-height: 1.6;">We will review your inquiry and contact you within <strong>24 hours</strong>.</p>
+              
+              <p style="margin: 0 0 30px 0; font-size: 14px; color: #666666; line-height: 1.6;">If you have any urgent questions, please feel free to contact us directly.</p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
             <td style="padding: 25px 40px; background-color: #fafafa; text-align: center; border-top: 1px solid #e8e8e8;">
-              <p style="margin: 0 0 5px 0; font-size: 14px; font-weight: 600; color: #1a1a1a;">${brandName}</p>
+              <p style="margin: 0 0 5px 0; font-size: 14px; font-weight: 600; color: #1a1a1a;">Best regards,</p>
+              <p style="margin: 0 0 10px 0; font-size: 14px; color: #1a1a1a;">${brandName} Team</p>
               <p style="margin: 0; font-size: 13px;"><a href="${storeUrl}" style="color: #4A90E2; text-decoration: none;">${storeUrl}</a></p>
             </td>
           </tr>
@@ -325,6 +284,6 @@ function generateCustomerEmail({ customer, diamond, quantity, totalPriceFormatte
 }
 
 module.exports = {
-    generateOwnerEmail,
-    generateCustomerEmail
+  generateOwnerEmail,
+  generateCustomerEmail
 };
