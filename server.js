@@ -75,11 +75,115 @@ app.post('/api/diamonds/search', async (req, res) => {
             }
         );
 
+        // Cache the diamonds from search results for direct link access
+        if (response.data && response.data.response && response.data.response.body && response.data.response.body.diamonds) {
+            const diamonds = response.data.response.body.diamonds;
+            diamonds.forEach(diamond => {
+                const diamondId = diamond.diamond_id || diamond.stock_num;
+                if (diamondId) {
+                    diamondCache.set(String(diamondId), {
+                        data: diamond,
+                        timestamp: Date.now()
+                    });
+                }
+            });
+            console.log(`Cached ${diamonds.length} diamonds for direct access`);
+        }
+
         res.json(response.data);
     } catch (error) {
         console.error('Error searching diamonds:', error.response?.data || error.message);
         res.status(error.response?.status || 500).json({
             error: 'Failed to search diamonds',
+            details: error.response?.data || error.message
+        });
+    }
+});
+
+// Simple in-memory cache for diamonds (stores recently viewed diamonds)
+const diamondCache = new Map();
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+// API endpoint to get diamond by ID (for direct links)
+app.get('/api/diamonds/get-by-id/:diamondId', async (req, res) => {
+    try {
+        const { diamondId } = req.params;
+        console.log('Fetching diamond by ID:', diamondId);
+
+        // Check cache first
+        const cached = diamondCache.get(diamondId);
+        if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+            console.log('Returning cached diamond');
+            return res.json({ diamond: cached.data });
+        }
+
+        const token = await getAccessToken();
+
+        // Search with broader parameters to increase chances of finding the diamond
+        // We'll search multiple pages if needed
+        const searchParams = {
+            search_type: 'White',
+            shapes: [],
+            sizes: [],
+            colors: [],
+            clarities: [],
+            cuts: [],
+            polishes: [],
+            symmetries: [],
+            labs: [],
+            fluorescence_intensities: [],
+            page_number: 1,
+            page_size: 100, // Increased page size
+            sort_by: 'price',
+            sort_direction: 'Asc'
+        };
+
+        // Try to find the diamond in multiple pages (up to 5 pages = 500 diamonds)
+        let diamond = null;
+        for (let page = 1; page <= 5 && !diamond; page++) {
+            searchParams.page_number = page;
+            console.log(`Searching page ${page} for diamond ${diamondId}...`);
+
+            const response = await axios.post(
+                'https://technet.rapnetapis.com/instant-inventory/api/Diamonds',
+                { request: { body: searchParams } },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            // Find the diamond with matching ID
+            if (response.data && response.data.response && response.data.response.body && response.data.response.body.diamonds) {
+                diamond = response.data.response.body.diamonds.find(d =>
+                    d.diamond_id == diamondId || d.stock_num == diamondId
+                );
+
+                if (diamond) {
+                    console.log(`Found diamond on page ${page}`);
+                    // Cache the diamond for future requests
+                    diamondCache.set(diamondId, {
+                        data: diamond,
+                        timestamp: Date.now()
+                    });
+                    return res.json({ diamond: diamond });
+                }
+            }
+        }
+
+        // Diamond not found after searching multiple pages
+        console.log('Diamond not found after searching 5 pages');
+        res.status(404).json({
+            error: 'Diamond not found',
+            message: 'This diamond may no longer be available. Please search for similar diamonds.'
+        });
+
+    } catch (error) {
+        console.error('Error fetching diamond by ID:', error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
+            error: 'Failed to fetch diamond',
             details: error.response?.data || error.message
         });
     }
