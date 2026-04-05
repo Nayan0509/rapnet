@@ -1,0 +1,1125 @@
+{% comment %}
+  Diamond Search Section - Uses Your Collection.liquid Design
+  This matches your existing product collection layout exactly
+{% endcomment %}
+
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+{{ 'diamond-search.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'diamond-grading-tables.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  
+  /* Diamond Search Filters */
+  .diamond-filters {
+    background: rgba(var(--color-foreground), 0.04);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
+  
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.1);
+  }
+  
+  .filter-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(var(--color-foreground), 0.9);
+  }
+  
+  .reset-filters-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(var(--color-foreground), 0.7);
+    background: transparent;
+    border: 1px solid rgba(var(--color-foreground), 0.2);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .reset-filters-btn:hover {
+    color: rgb(var(--color-button));
+    border-color: rgb(var(--color-button));
+    background: rgba(var(--color-button), 0.05);
+  }
+  
+  .reset-filters-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .select-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(var(--color-button));
+    text-decoration: none;
+    margin-left: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .select-all-link:hover {
+    background: rgba(var(--color-button), 0.1);
+    text-decoration: none;
+  }
+  
+  .filters-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px 12px;
+  }
+  
+  .filter-row {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .filter-row.full-width {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+  
+  .filter-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: rgba(var(--color-foreground), 0.75);
+  }
+  
+  .shape-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #F8F8F8;
+    padding: 15px;
+    border-radius: 6px;
+  }
+  
+  .shape-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 10px;
+    border: 2px solid rgba(var(--color-foreground), 0.12);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #FFFFFF;
+    font-size: 11px;
+    min-width: 85px;
+    min-height: 85px;
+    text-align: center;
+  }
+  
+  .shape-item:hover,
+  .shape-item.active {
+    border-color: rgb(var(--color-button));
+    background: rgba(var(--color-button), 0.05);
+  }
+  
+  .shape-item .icon {
+    font-size: 22px;
+    margin-bottom: 3px;
+  }
+  
+  .shape-item .shape-image {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    margin-bottom: 6px;
+  }
+  
+  .shape-item .icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+  
+  .size-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  
+  .size-inputs input {
+    flex: 1;
+    padding: 7px;
+    border: 1px solid rgba(var(--color-foreground), 0.2);
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  
+  .size-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .size-presets button {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  
+  /* Price Slider - Simple & Clean */
+  .info-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    background: rgba(var(--color-button), 0.12);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 16px;
+    font-size: 11px;
+    color: rgb(var(--color-button));
+    cursor: help;
+  }
+  
+  .price-slider-wrapper {
+    width: 100%;
+  }
+  
+  .price-slider-container {
+    position: relative;
+    height: 35px;
+    margin: 10px 0;
+  }
+  
+  .slider-track {
+    position: absolute;
+    height: 3px;
+    background: #DDDDDD;
+    width: 100%;
+    top: 15px;
+    z-index: 1;
+  }
+  
+  .slider-range {
+    position: absolute;
+    height: 3px;
+    background: rgb(var(--color-button));
+    top: 15px;
+    z-index: 2;
+  }
+  
+  .price-slider {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background: #161842;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+    top: 15px;
+    z-index: 3;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .price-slider::-webkit-slider-runnable-track {
+    height: 3px;
+    background: transparent;
+  }
+  
+  .price-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: rgb(var(--color-button));
+    border: 3px solid #FFFFFF;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    margin-top: -8.5px;
+  }
+  
+  .price-slider::-moz-range-track {
+    height: 3px;
+    background: transparent;
+  }
+  
+  .price-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: rgb(var(--color-button));
+    border: 3px solid #FFFFFF;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  .price-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .price-value-box {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 7px 12px;
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+  }
+  
+  .price-currency {
+    font-size: 13px;
+    color: #888888;
+    flex-shrink: 0;
+  }
+  
+  .price-input {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    color: #333333;
+    width: 100px;
+    padding: 2px;
+    outline: none;
+    font-family: inherit;
+  }
+  
+  .price-input:focus {
+    outline: 1px solid rgb(var(--color-button));
+    border-radius: 2px;
+  }
+  
+  .price-input::-webkit-inner-spin-button,
+  .price-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  #priceFromDisplay,
+  #priceToDisplay {
+    font-size: 13px;
+    color: #333333;
+  }
+  
+  .color-btn,
+  .clarity-btn {
+    min-width: 38px;
+    padding: 8px 6px;
+    border: 1px solid rgba(var(--color-foreground), 0.12);
+    background: rgb(var(--color-background));
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  
+  .color-btn:hover,
+  .color-btn.active,
+  .clarity-btn:hover,
+  .clarity-btn.active {
+    border-color: rgb(var(--color-button));
+    background: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
+  }
+  
+  .compact-select {
+    padding: 8px;
+    font-size: 13px;
+    border: 1px solid rgba(var(--color-foreground), 0.2);
+    border-radius: 4px;
+  }
+  
+  .lab-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .filter-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+  }
+  
+  .loading-state {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  
+  .spinner {
+    border: 4px solid rgba(var(--color-foreground), 0.1);
+    border-top: 4px solid rgb(var(--color-button));
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @media (max-width: 990px) {
+    .filters-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .shape-grid {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .diamond-filters {
+      padding: 20px;
+    }
+    
+    .shape-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} isolate gradient">
+  <div class="collection section-{{ section.id }}-padding" id="diamond-collection-{{ section.id }}" data-id="{{ section.id }}">
+  
+    <!-- Diamond Wizard Button -->
+    <div class="page-width" style="text-align: center; ">
+      <button id="openWizardBtn" class="wizard-trigger-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Find My Diamonds
+      </button>
+      <p style="margin-top: 12px; font-size: 13px; color: rgba(var(--color-foreground), 0.6);">
+        “Every diamond has a soul. Let us help you find yours.” </br>
+        Choose your shape, set your price, and decide what matters most — size, balance, quality.
+      </p>
+    </div>
+    <!-- OR Divider -->
+    <div class="page-width" style="text-align: center; margin: 4px auto; position: relative;">
+      <div style="position: relative; display: flex; align-items: center; justify-content: center; max-width: 600px; margin: 0 auto;">
+        <div style="flex: 1; height: 1px; background: rgba(var(--color-foreground), 0.15);"></div>
+        <span style="padding: 0 20px; font-size: 14px; font-weight: 600; color: rgba(var(--color-foreground), 0.5); letter-spacing: 2px;">OR</span>
+        <div style="flex: 1; height: 1px; background: rgba(var(--color-foreground), 0.15);"></div>
+      </div>
+    </div>
+    <!-- Diamond Search Filters -->
+    <div class="page-width">
+      <div class="diamond-filters">
+        <div class="filter-header">
+          <h3>Filter Diamonds</h3>
+          <button class="reset-filters-btn" onclick="resetAllFilters(); return false;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M3 12h18M3 18h18"/>
+            </svg>
+            Reset Filters
+          </button>
+        </div>
+        
+        <div class="filters-grid">
+          
+          <!-- Shape Filter - Full Width -->
+          <div class="filter-row full-width">
+            <label class="filter-label">
+              Shape 
+              <a href="#" onclick="selectAllShapes(); return false;" class="select-all-link">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Select All
+              </a>
+            </label>
+            <div class="shape-grid" id="shapeGrid">
+              <div class="shape-item" data-shape="Round">
+                {% if section.settings.shape_round_image %}
+                  <img src="{{ section.settings.shape_round_image | image_url: width: 50 }}" alt="Round" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">○</span>
+                {% endif %}
+                <span>Round</span>
+              </div>
+              <div class="shape-item" data-shape="Pear">
+                {% if section.settings.shape_pear_image %}
+                  <img src="{{ section.settings.shape_pear_image | image_url: width: 50 }}" alt="Pear" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">◗</span>
+                {% endif %}
+                <span>Pear</span>
+              </div>
+              <div class="shape-item" data-shape="Oval">
+                {% if section.settings.shape_oval_image %}
+                  <img src="{{ section.settings.shape_oval_image | image_url: width: 50 }}" alt="Oval" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">◯</span>
+                {% endif %}
+                <span>Oval</span>
+              </div>
+              <div class="shape-item" data-shape="Marquise">
+                {% if section.settings.shape_marquise_image %}
+                  <img src="{{ section.settings.shape_marquise_image | image_url: width: 50 }}" alt="Marquise" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">◊</span>
+                {% endif %}
+                <span>Marquise</span>
+              </div>
+              <div class="shape-item" data-shape="Heart">
+                {% if section.settings.shape_heart_image %}
+                  <img src="{{ section.settings.shape_heart_image | image_url: width: 50 }}" alt="Heart" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">♡</span>
+                {% endif %}
+                <span>Heart</span>
+              </div>
+              {% comment %} <div class="shape-item" data-shape="Radiant">
+                {% if section.settings.shape_radiant_image %}
+                  <img src="{{ section.settings.shape_radiant_image | image_url: width: 50 }}" alt="Radiant" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">◇</span>
+                {% endif %}
+                <span>Radiant</span>
+              </div> {% endcomment %}
+              <div class="shape-item" data-shape="Princess">
+                {% if section.settings.shape_princess_image %}
+                  <img src="{{ section.settings.shape_princess_image | image_url: width: 50 }}" alt="Princess" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">□</span>
+                {% endif %}
+                <span>Princess</span>
+              </div>
+              <div class="shape-item" data-shape="Emerald">
+                {% if section.settings.shape_emerald_image %}
+                  <img src="{{ section.settings.shape_emerald_image | image_url: width: 50 }}" alt="Emerald" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">▭</span>
+                {% endif %}
+                <span>Emerald</span>
+              </div>
+              {% comment %} <div class="shape-item" data-shape="Asscher">
+                {% if section.settings.shape_asscher_image %}
+                  <img src="{{ section.settings.shape_asscher_image | image_url: width: 50 }}" alt="Asscher" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">◻</span>
+                {% endif %}
+                <span>Asscher</span>
+              </div> {% endcomment %}
+              <div class="shape-item" data-shape="Cushion">
+                {% if section.settings.shape_cushion_image %}
+                  <img src="{{ section.settings.shape_cushion_image | image_url: width: 50 }}" alt="Cushion" width="30" height="30" class="shape-image">
+                {% else %}
+                  <span class="icon">▢</span>
+                {% endif %}
+                <span>Cushion</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Size Filter -->
+          <div class="filter-row">
+            <label class="filter-label">Size (Carat)</label>
+            <div class="size-inputs">
+              <input type="number" id="sizeFrom" step="0.01" placeholder="From" max="50" class="field__input">
+              <span>-</span>
+              <input type="number" id="sizeTo" step="0.01" placeholder="To" max="50" class="field__input">
+            </div>
+            <div class="size-presets">
+              <button onclick="setSizeRange(0.30, 0.39)" class="button button--secondary">0.30-0.39</button>
+              <button onclick="setSizeRange(0.40, 0.49)" class="button button--secondary">0.40-0.49</button>
+              <button onclick="setSizeRange(0.50, 0.69)" class="button button--secondary">0.50-0.69</button>
+              <button onclick="setSizeRange(0.70, 0.89)" class="button button--secondary">0.70-0.89</button>
+              <button onclick="setSizeRange(0.90, 0.99)" class="button button--secondary">0.90-0.99</button>
+              <button onclick="setSizeRange(1.00, 1.49)" class="button button--secondary">1.00-1.49</button>
+              <button onclick="setSizeRange(1.50, 1.99)" class="button button--secondary">1.50-1.99</button>
+              <button onclick="setSizeRange(2.00, 2.99)" class="button button--secondary">2.00-2.99</button>
+              <button onclick="setSizeRange(3.00, 4.99)" class="button button--secondary">3.00-4.99</button>
+              <button onclick="setSizeRange(5.00, 50.00)" class="button button--secondary">More</button>
+            </div>
+          </div>
+
+          <!-- Price Filter -->
+          <div class="filter-row">
+            <label class="filter-label">
+              Price (Rupees) <span class="info-icon">ⓘ</span>
+            </label>
+            <div class="price-slider-wrapper">
+              <div class="price-slider-container">
+                <div class="slider-track"></div>
+                <div class="slider-range" id="sliderRange"></div>
+                <input type="range" id="priceFromSlider" min="0" max="10000000" step="10000" value="0" class="price-slider">
+                <input type="range" id="priceToSlider" min="0" max="10000000" step="10000" value="1000000" class="price-slider">
+              </div>
+              <div class="price-values">
+                <div class="price-value-box">
+                  <span class="price-currency">₹</span>
+                  <input type="number" id="priceFromInput" class="price-input" value="0" min="0" max="10000000" step="10000">
+                </div>
+                <div class="price-value-box">
+                  <span class="price-currency">₹</span>
+                  <input type="number" id="priceToInput" class="price-input" value="1000000" min="0" max="10000000" step="10000">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Color Filter -->
+          <div class="filter-row">
+            <label class="filter-label">Color</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <button class="color-btn" data-color="D">D</button>
+              <button class="color-btn" data-color="E">E</button>
+              <button class="color-btn" data-color="F">F</button>
+              <button class="color-btn" data-color="G">G</button>
+              <button class="color-btn" data-color="H">H</button>
+              <button class="color-btn" data-color="I">I</button>
+              <button class="color-btn" data-color="J">J</button>
+              <button class="color-btn" data-color="K">K</button>
+              <button class="color-btn" data-color="L">L</button>
+              <button class="color-btn" data-color="M">M</button>
+            </div>
+          </div>
+
+          <!-- Clarity Filter -->
+          <div class="filter-row">
+            <label class="filter-label">Clarity</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <button class="clarity-btn" data-clarity="FL">FL</button>
+              <button class="clarity-btn" data-clarity="IF">IF</button>
+              <button class="clarity-btn" data-clarity="VVS1">VVS1</button>
+              <button class="clarity-btn" data-clarity="VVS2">VVS2</button>
+              <button class="clarity-btn" data-clarity="VS1">VS1</button>
+              <button class="clarity-btn" data-clarity="VS2">VS2</button>
+              <button class="clarity-btn" data-clarity="SI1">SI1</button>
+              <button class="clarity-btn" data-clarity="SI2">SI2</button>
+              <button class="clarity-btn" data-clarity="I1">I1</button>
+              <button class="clarity-btn" data-clarity="I2">I2</button>
+            </div>
+          </div>
+
+          <!-- Fluorescence -->
+          <div class="filter-row">
+            <label class="filter-label">Fluorescence</label>
+            <div class="filter-checkboxes">
+              <label><input type="checkbox" id="fluor-none" value="None" checked> None</label>
+              <label><input type="checkbox" id="fluor-faint" value="Faint" checked> Faint</label>
+              <label><input type="checkbox" id="fluor-vslight" value="Very Slight" checked> V.Slight</label>
+              <label><input type="checkbox" id="fluor-slight" value="Slight" checked> Slight</label>
+              <label><input type="checkbox" id="fluor-medium" value="Medium" checked> Medium</label>
+              <label><input type="checkbox" id="fluor-strong" value="Strong" checked> Strong</label>
+              <label><input type="checkbox" id="fluor-vstrong" value="Very Strong" checked> V.Strong</label>
+            </div>
+          </div>
+
+          <!-- Certification -->
+          <div class="filter-row">
+            <label class="filter-label">Certification</label>
+            <div class="lab-checkboxes" id="labCheckboxes">
+              <label><input type="checkbox" value="GIA" checked> GIA</label>
+              <label><input type="checkbox" value="IGI"> IGI</label>
+              <label><input type="checkbox" value="HRD"> HRD</label>
+            </div>
+          </div>
+
+        </div>
+
+        <button id="searchBtn" class="button button--primary button--full-width" style="margin-top: 15px;">
+          Search Diamonds
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading-state page-width" style="display: none;">
+      <div class="spinner"></div>
+      <p>Searching diamonds...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="page-width" style="display: none; background: #fee; color: #c00; padding: 15px; border-radius: 4px; margin: 20px auto;"></div>
+
+    <!-- Results Section (Uses Same Structure as Collection) -->
+    <div id="results" class="page-width">
+      <!-- Results will be injected here by JavaScript using your collection grid structure -->
+    </div>
+
+  </div>
+</div>
+
+<!-- Diamond Wizard Modal -->
+<div id="diamondWizardModal" class="wizard-modal">
+  <div class="wizard-overlay"></div>
+  <div class="wizard-container">
+    <button class="wizard-close" id="closeWizardBtn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    
+    <!-- Progress Bar -->
+    <div class="wizard-progress">
+      <div class="progress-tabs">
+        <button class="progress-tab active" data-step="1">
+          <span class="tab-check">✓</span>
+          <span class="tab-text">Origin</span>
+        </button>
+        <button class="progress-tab" data-step="2">
+          <span class="tab-text">Shape</span>
+        </button>
+        <button class="progress-tab" data-step="3">
+          <span class="tab-text">Budget + Quality</span>
+        </button>
+        <button class="progress-tab" data-step="4">
+          <span class="tab-text">Results</span>
+        </button>
+      </div>
+      <div class="progress-labels">
+        <span class="label-origin active">ORIGIN</span>
+        <span class="label-shape">SHAPE</span>
+        <span class="label-budget">BUDGET + QUALITY</span>
+      </div>
+    </div>
+
+    <!-- Slide 1: Origin -->
+    <div class="wizard-slide active" data-slide="1">
+      <div class="wizard-header">
+        <p class="question-number">Question 1 of 3</p>
+        <h2>Choose Your Diamond Origin</h2>
+      </div>
+      <div class="wizard-content">
+        <div class="origin-options">
+          <div class="origin-card" data-origin="natural">
+            <div class="origin-icon">💎</div>
+            <h3>Natural</h3>
+            <p>Formed over billions of years deep within the earth</p>
+            <div class="origin-badge">Traditional</div>
+          </div>
+          <!-- Lab Grown option hidden for now
+          <div class="origin-card" data-origin="lab">
+            <div class="origin-icon">🔬</div>
+            <h3>Lab Grown</h3>
+            <p>Ethically created with identical properties to natural diamonds</p>
+            <div class="origin-badge">Popular Choice</div>
+          </div>
+          -->
+        </div>
+      </div>
+      <div class="wizard-actions">
+        <button class="wizard-btn wizard-btn-secondary" id="wizardBackBtn1" style="visibility: hidden;">Back</button>
+        <button class="wizard-btn wizard-btn-primary" id="wizardNextBtn1" disabled>Next</button>
+      </div>
+    </div>
+
+    <!-- Slide 2: Shape -->
+    <div class="wizard-slide" data-slide="2">
+      <div class="wizard-header">
+        <p class="question-number">Question 2 of 3</p>
+        <h2>Select Shape</h2>
+        <p>Diamonds come in different shapes like round, princess, emerald and pear.</p>
+      </div>
+      <div class="wizard-content">
+        <div class="wizard-shape-grid">
+          <div class="wizard-shape-item" data-shape="Round">
+            {% if section.settings.shape_round_image %}
+              <img src="{{ section.settings.shape_round_image | image_url: width: 80 }}" alt="Round" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">○</span>
+            {% endif %}
+            <span class="shape-name">Round</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Pear">
+            {% if section.settings.shape_pear_image %}
+              <img src="{{ section.settings.shape_pear_image | image_url: width: 80 }}" alt="Pear" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">◗</span>
+            {% endif %}
+            <span class="shape-name">Pear</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Oval">
+            {% if section.settings.shape_oval_image %}
+              <img src="{{ section.settings.shape_oval_image | image_url: width: 80 }}" alt="Oval" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">◯</span>
+            {% endif %}
+            <span class="shape-name">Oval</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Marquise">
+            {% if section.settings.shape_marquise_image %}
+              <img src="{{ section.settings.shape_marquise_image | image_url: width: 80 }}" alt="Marquise" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">◊</span>
+            {% endif %}
+            <span class="shape-name">Marquise</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Heart">
+            {% if section.settings.shape_heart_image %}
+              <img src="{{ section.settings.shape_heart_image | image_url: width: 80 }}" alt="Heart" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">♡</span>
+            {% endif %}
+            <span class="shape-name">Heart</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Princess">
+            {% if section.settings.shape_princess_image %}
+              <img src="{{ section.settings.shape_princess_image | image_url: width: 80 }}" alt="Princess" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">□</span>
+            {% endif %}
+            <span class="shape-name">Princess</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Emerald">
+            {% if section.settings.shape_emerald_image %}
+              <img src="{{ section.settings.shape_emerald_image | image_url: width: 80 }}" alt="Emerald" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">▭</span>
+            {% endif %}
+            <span class="shape-name">Emerald</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Cushion">
+            {% if section.settings.shape_cushion_image %}
+              <img src="{{ section.settings.shape_cushion_image | image_url: width: 80 }}" alt="Cushion" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">▢</span>
+            {% endif %}
+            <span class="shape-name">Cushion</span>
+          </div>
+          {% comment %}
+          <div class="wizard-shape-item" data-shape="Radiant">
+            {% if section.settings.shape_radiant_image %}
+              <img src="{{ section.settings.shape_radiant_image | image_url: width: 80 }}" alt="Radiant" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">◇</span>
+            {% endif %}
+            <span class="shape-name">Radiant</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Asscher">
+            {% if section.settings.shape_asscher_image %}
+              <img src="{{ section.settings.shape_asscher_image | image_url: width: 80 }}" alt="Asscher" class="shape-icon-img">
+            {% else %}
+              <span class="shape-icon">◻</span>
+            {% endif %}
+            <span class="shape-name">Asscher</span>
+          </div>
+          <div class="wizard-shape-item" data-shape="Elongated Cushion">
+            <span class="shape-icon">⬭</span>
+            <span class="shape-name">Elongated Cushion</span>
+          </div>
+          {% endcomment %}
+        </div>
+      </div>
+      <div class="wizard-actions">
+        <button class="wizard-btn wizard-btn-secondary" id="wizardBackBtn2">Back</button>
+        <button class="wizard-btn wizard-btn-primary" id="wizardNextBtn2" disabled>Next</button>
+      </div>
+    </div>
+
+    <!-- Slide 3: Budget + Quality -->
+    <div class="wizard-slide" data-slide="3">
+      <div class="wizard-header">
+        <p class="question-number">Question 3 of 3</p>
+        <h2>Bigger or Better?</h2>
+        <p>What do you prefer size or quality?</p>
+      </div>
+      <div class="wizard-content">
+        <div class="budget-section">
+          <label class="budget-label">What is your budget?</label>
+          <div class="budget-input-wrapper">
+            <span class="currency-symbol">₹</span>
+            <input type="number" id="wizardBudget" class="budget-input" placeholder="Enter amount" min="10000" step="10000">
+          </div>
+          <p class="budget-note">We'll show you 3 options: size balanced and quality</p>
+        </div>
+        
+        <div class="preference-section">
+          <label class="preference-label">What do you prefer?</label>
+          <div class="preference-options">
+            <button class="preference-btn" data-preference="size">
+              <div class="preference-icon">📏</div>
+              <span>Size</span>
+              <p>Highest size available</p>
+            </button>
+            <button class="preference-btn" data-preference="balance">
+              <div class="preference-icon">⚖️</div>
+              <span>Balance</span>
+              <p>Best of both worlds</p>
+            </button>
+            <button class="preference-btn" data-preference="quality">
+              <div class="preference-icon">✨</div>
+              <span>Quality</span>
+              <p>Premium quality</p>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="wizard-actions">
+        <button class="wizard-btn wizard-btn-secondary" id="wizardBackBtn3">Back</button>
+        <button class="wizard-btn wizard-btn-primary" id="wizardViewResults" disabled>View Results</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'diamond-search.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Diamond Search",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "api_endpoint",
+      "label": "API Endpoint URL",
+      "default": "https://rapnet.vercel.app/api/diamonds/search",
+      "info": "Enter your deployed API endpoint URL"
+    },
+    {
+      "type": "header",
+      "content": "Shape Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_round_image",
+      "label": "Round Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_pear_image",
+      "label": "Pear Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_oval_image",
+      "label": "Oval Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_marquise_image",
+      "label": "Marquise Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_heart_image",
+      "label": "Heart Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_radiant_image",
+      "label": "Radiant Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_princess_image",
+      "label": "Princess Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_emerald_image",
+      "label": "Emerald Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_asscher_image",
+      "label": "Asscher Shape Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "shape_cushion_image",
+      "label": "Cushion Shape Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "default": "Search Diamonds",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Medium"
+        },
+        {
+          "value": "h0",
+          "label": "Large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "select",
+      "id": "description_style",
+      "label": "Description style",
+      "options": [
+        {
+          "value": "body",
+          "label": "Body"
+        },
+        {
+          "value": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "Number of columns on desktop"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "default": "adapt",
+      "label": "Image ratio"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "arch",
+          "label": "Arch"
+        },
+        {
+          "value": "round",
+          "label": "Round"
+        }
+      ],
+      "default": "default",
+      "label": "Image shape"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "default": "2",
+      "label": "Number of columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Diamond Search (Collection Style)"
+    }
+  ]
+}
+{% endschema %}

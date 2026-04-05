@@ -1,0 +1,959 @@
+{% comment %}
+  Template: page.wishlist.liquid
+  Diamond Wishlist Page - View and manage wishlist items
+{% endcomment %}
+
+{{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .wishlist-page {
+    padding: 36px 0;
+    min-height: 60vh;
+  }
+  
+  @media screen and (min-width: 750px) {
+    .wishlist-page {
+      padding: 48px 0;
+    }
+  }
+
+  .wishlist-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .wishlist-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .wishlist-count {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .wishlist-empty {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .wishlist-empty-icon {
+    font-size: 64px;
+    color: #ddd;
+    margin-bottom: 20px;
+  }
+
+  .wishlist-empty h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+
+  .wishlist-empty p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+  }
+
+  .wishlist-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .wishlist-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .wishlist-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .wishlist-item {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+    position: relative;
+  }
+
+  .wishlist-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .wishlist-item-image {
+    position: relative;
+    padding-top: 100%;
+    background: #f5f5f5;
+    overflow: hidden;
+  }
+
+  .wishlist-item-image img,
+  .wishlist-item-image video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .wishlist-item-remove {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .wishlist-item-remove:hover {
+    background: #e74c3c;
+    color: white;
+    transform: scale(1.1);
+  }
+
+  .wishlist-item-content {
+    padding: 20px;
+  }
+
+  .wishlist-item-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+    line-height: 1.4;
+  }
+
+  .wishlist-item-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+
+  .wishlist-item-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .wishlist-item-detail-label {
+    color: #999;
+    font-weight: 500;
+  }
+
+  .wishlist-item-detail-value {
+    color: #333;
+    font-weight: 600;
+  }
+
+  .wishlist-item-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  .wishlist-item-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .wishlist-item-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .wishlist-item-btn-primary {
+    background: #333;
+    color: white;
+  }
+
+  .wishlist-item-btn-primary:hover {
+    background: #000;
+  }
+
+  .wishlist-item-btn-secondary {
+    background: #f5f5f5;
+    color: #333;
+    border: 1px solid #e5e5e5;
+  }
+
+  .wishlist-item-btn-secondary:hover {
+    background: #e5e5e5;
+  }
+
+  .wishlist-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .wishlist-action-btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .wishlist-action-btn-primary {
+    background: #c9a961;
+    color: #fff;
+  }
+
+  .wishlist-action-btn-primary:hover {
+    background: #b89851;
+  }
+
+  .wishlist-action-btn-secondary {
+    background: #f5f5f5;
+    color: #333;
+    border: 1px solid #e5e5e5;
+  }
+
+  .wishlist-action-btn-secondary:hover {
+    background: #e5e5e5;
+  }
+
+  /* Inquiry Modal */
+  .inquiry-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .inquiry-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .inquiry-modal-content {
+    background-color: #fff;
+    padding: 0;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .inquiry-modal-header {
+    padding: 24px;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+  }
+
+  .inquiry-modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .inquiry-modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+
+  .inquiry-modal-close:hover {
+    color: #333;
+  }
+
+  .inquiry-modal-body {
+    padding: 24px;
+  }
+
+  .inquiry-form-group {
+    margin-bottom: 20px;
+  }
+
+  .inquiry-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .inquiry-form-group input,
+  .inquiry-form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  .inquiry-form-group input:focus,
+  .inquiry-form-group textarea:focus {
+    outline: none;
+    border-color: #333;
+  }
+
+  .inquiry-form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .inquiry-form-group.required label::after {
+    content: " *";
+    color: #e74c3c;
+  }
+
+  .inquiry-diamond-list {
+    background: #f9f9f9;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .inquiry-diamond-list h3 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .inquiry-diamond-item {
+    padding: 12px;
+    background: #fff;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    border: 1px solid #e5e5e5;
+  }
+
+  .inquiry-diamond-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .inquiry-diamond-item-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .inquiry-diamond-item-details {
+    color: #666;
+    font-size: 12px;
+  }
+
+  .inquiry-diamond-item-price {
+    font-weight: 600;
+    color: #c9a961;
+    margin-top: 4px;
+  }
+
+  .inquiry-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .inquiry-submit-btn:hover {
+    background: #000;
+  }
+
+  .inquiry-submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .inquiry-success-message,
+  .inquiry-error-message {
+    display: none;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  .inquiry-success-message {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .inquiry-error-message {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+</style>
+
+<script src="{{ 'diamond-product.js' | asset_url }}" defer="defer"></script>
+
+<div class="wishlist-page gradient color-scheme-1">
+  <div class="page-width">
+    <div class="wishlist-header">
+      <h1>My Wishlist</h1>
+      <p class="wishlist-count" id="wishlist-count">Loading...</p>
+    </div>
+
+    <div id="wishlist-empty" class="wishlist-empty" style="display: none;">
+      <div class="wishlist-empty-icon">♡</div>
+      <h2>Your wishlist is empty</h2>
+      <p>Start adding diamonds to your wishlist to keep track of your favorites</p>
+      <a href="/pages/contact?view=diamond-search" class="wishlist-action-btn wishlist-action-btn-primary">
+        Browse Diamonds
+      </a>
+    </div>
+
+    <div id="wishlist-content" style="display: none;">
+      <div id="wishlist-grid" class="wishlist-grid">
+        <!-- Wishlist items will be populated here by JavaScript -->
+      </div>
+
+      <div class="wishlist-actions">
+        <button 
+          id="send-inquiry-all" 
+          class="wishlist-action-btn wishlist-action-btn-primary"
+          onclick="openInquiryModal()"
+        >
+          Send Inquiry for All
+        </button>
+        <button 
+          id="clear-wishlist" 
+          class="wishlist-action-btn wishlist-action-btn-secondary"
+          onclick="clearWishlist()"
+        >
+          Clear Wishlist
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Inquiry Modal -->
+<div id="inquiry-modal" class="inquiry-modal">
+  <div class="inquiry-modal-content">
+    <div class="inquiry-modal-header">
+      <h2 id="inquiry-modal-title">Send Inquiry</h2>
+      <button class="inquiry-modal-close" id="close-inquiry-modal">&times;</button>
+    </div>
+    <div class="inquiry-modal-body">
+      <div id="inquiry-success-message" class="inquiry-success-message"></div>
+      <div id="inquiry-error-message" class="inquiry-error-message"></div>
+      
+      <div id="inquiry-diamond-list" class="inquiry-diamond-list">
+        <!-- Diamond list will be populated here -->
+      </div>
+
+      <form id="inquiry-form">
+        <div class="inquiry-form-group required">
+          <label for="inquiry-name">Name</label>
+          <input 
+            type="text" 
+            id="inquiry-name" 
+            name="name" 
+            required>
+        </div>
+
+        <div class="inquiry-form-group required">
+          <label for="inquiry-email">Email</label>
+          <input 
+            type="email" 
+            id="inquiry-email" 
+            name="email" 
+            required>
+        </div>
+
+        <div class="inquiry-form-group required">
+          <label for="inquiry-phone">Phone</label>
+          <input 
+            type="tel" 
+            id="inquiry-phone" 
+            name="phone" 
+            required>
+        </div>
+
+        <div class="inquiry-form-group">
+          <label for="inquiry-message">Message (Optional)</label>
+          <textarea 
+            id="inquiry-message" 
+            name="message" 
+            rows="4"
+            placeholder="Any additional information..."></textarea>
+        </div>
+
+        <button type="submit" class="inquiry-submit-btn" id="inquiry-submit-btn">
+          Send Inquiry
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const WL_KEY = 'dp_diamond_wishlist';
+  const CURRENCY = 'Rs.';
+
+  function getWishlist() {
+    try {
+      return JSON.parse(localStorage.getItem(WL_KEY)) || {};
+    } catch(e) {
+      return {};
+    }
+  }
+
+  function saveWishlist(wl) {
+    localStorage.setItem(WL_KEY, JSON.stringify(wl));
+  }
+
+  function renderWishlist() {
+    const wishlist = getWishlist();
+    const items = Object.values(wishlist);
+    const count = items.length;
+
+    const countEl = document.getElementById('wishlist-count');
+    const emptyEl = document.getElementById('wishlist-empty');
+    const contentEl = document.getElementById('wishlist-content');
+    const gridEl = document.getElementById('wishlist-grid');
+
+    if (countEl) {
+      countEl.textContent = count === 0 ? 'No items' : `${count} ${count === 1 ? 'item' : 'items'}`;
+    }
+
+    if (count === 0) {
+      if (emptyEl) emptyEl.style.display = 'block';
+      if (contentEl) contentEl.style.display = 'none';
+      return;
+    }
+
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (contentEl) contentEl.style.display = 'block';
+
+    if (!gridEl) return;
+
+    let html = '';
+    items.forEach(function(diamond) {
+      const name = [
+        diamond.lab,
+        diamond.size ? diamond.size + ' ct' : '',
+        diamond.color + '-' + diamond.clarity,
+        diamond.shape
+      ].filter(Boolean).join(' ');
+
+      const price = diamond.total_sales_price_in_currency || diamond.total_sales_price || 0;
+      
+      // Check if image is a video
+      const imageUrl = diamond.image_file || '';
+      const isVideo = imageUrl && (
+        imageUrl.toLowerCase().endsWith('.mp4') ||
+        imageUrl.toLowerCase().endsWith('.webm') ||
+        imageUrl.toLowerCase().endsWith('.mov')
+      );
+      
+      const placeholderSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23f5f5f5'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' fill='%23999'%3ENo Image%3C/text%3E%3C/svg%3E";
+
+      html += `
+        <div class="wishlist-item" data-diamond-id="${diamond.diamond_id}">
+          <div class="wishlist-item-image">
+            ${imageUrl ? (
+              isVideo ? 
+                `<video autoplay loop muted playsinline><source src="${imageUrl}" type="video/mp4"></video>` :
+                `<img src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.src='${placeholderSvg}'">`
+            ) : `<img src="${placeholderSvg}" alt="No image">`}
+            <button 
+              class="wishlist-item-remove" 
+              onclick="removeFromWishlist(${diamond.diamond_id})"
+              title="Remove from wishlist"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="wishlist-item-content">
+            <h3 class="wishlist-item-title">${name}</h3>
+            <div class="wishlist-item-details">
+              ${diamond.shape ? `
+                <div class="wishlist-item-detail">
+                  <span class="wishlist-item-detail-label">Shape:</span>
+                  <span class="wishlist-item-detail-value">${diamond.shape}</span>
+                </div>
+              ` : ''}
+              ${diamond.size ? `
+                <div class="wishlist-item-detail">
+                  <span class="wishlist-item-detail-label">Carat:</span>
+                  <span class="wishlist-item-detail-value">${diamond.size}</span>
+                </div>
+              ` : ''}
+              ${diamond.color ? `
+                <div class="wishlist-item-detail">
+                  <span class="wishlist-item-detail-label">Color:</span>
+                  <span class="wishlist-item-detail-value">${diamond.color}</span>
+                </div>
+              ` : ''}
+              ${diamond.clarity ? `
+                <div class="wishlist-item-detail">
+                  <span class="wishlist-item-detail-label">Clarity:</span>
+                  <span class="wishlist-item-detail-value">${diamond.clarity}</span>
+                </div>
+              ` : ''}
+            </div>
+            <div class="wishlist-item-price">
+              ${CURRENCY}${price.toLocaleString('en-IN')}
+            </div>
+            <div class="wishlist-item-actions">
+              <button 
+                class="wishlist-item-btn wishlist-item-btn-primary"
+                onclick="openSingleInquiryModal(${diamond.diamond_id})"
+              >
+                Send Inquiry
+              </button>
+              <a 
+                href="/pages/contact?view=diamond-product&id=${diamond.diamond_id}" 
+                class="wishlist-item-btn wishlist-item-btn-secondary"
+              >
+                View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    gridEl.innerHTML = html;
+  }
+
+  window.removeFromWishlist = function(diamondId) {
+    const wishlist = getWishlist();
+    delete wishlist[diamondId];
+    saveWishlist(wishlist);
+    renderWishlist();
+    
+    // Update header wishlist count
+    updateHeaderWishlistCount();
+  };
+
+  window.clearWishlist = function() {
+    if (!confirm('Are you sure you want to clear your entire wishlist?')) {
+      return;
+    }
+    saveWishlist({});
+    renderWishlist();
+    
+    // Update header wishlist count
+    updateHeaderWishlistCount();
+  };
+
+  window.openSingleInquiryModal = function(diamondId) {
+    const wishlist = getWishlist();
+    const diamond = wishlist[diamondId];
+    
+    if (!diamond) {
+      alert('Diamond not found in wishlist');
+      return;
+    }
+
+    openInquiryModalWithDiamonds([diamond]);
+  };
+
+  window.openInquiryModal = function() {
+    const wishlist = getWishlist();
+    const items = Object.values(wishlist);
+    
+    if (items.length === 0) {
+      alert('Your wishlist is empty');
+      return;
+    }
+
+    openInquiryModalWithDiamonds(items);
+  };
+
+  function openInquiryModalWithDiamonds(diamonds) {
+    const modal = document.getElementById('inquiry-modal');
+    const modalTitle = document.getElementById('inquiry-modal-title');
+    const diamondList = document.getElementById('inquiry-diamond-list');
+    const form = document.getElementById('inquiry-form');
+    const successMsg = document.getElementById('inquiry-success-message');
+    const errorMsg = document.getElementById('inquiry-error-message');
+
+    if (!modal) return;
+
+    // Set title
+    if (modalTitle) {
+      modalTitle.textContent = diamonds.length === 1 ? 'Send Inquiry' : `Send Inquiry for ${diamonds.length} Diamonds`;
+    }
+
+    // Build diamond list
+    if (diamondList) {
+      let listHtml = '<h3>Selected Diamond' + (diamonds.length > 1 ? 's' : '') + '</h3>';
+      diamonds.forEach(function(d, index) {
+        const name = [d.lab, d.size ? d.size + ' ct' : '', d.color + '-' + d.clarity, d.shape].filter(Boolean).join(' ');
+        const price = d.total_sales_price_in_currency || d.total_sales_price || 0;
+        const sku = d.stock_num || d.diamond_id;
+        
+        listHtml += `
+          <div class="inquiry-diamond-item">
+            <div class="inquiry-diamond-item-name">${index + 1}. ${name}</div>
+            <div class="inquiry-diamond-item-details">SKU: ${sku}</div>
+            <div class="inquiry-diamond-item-price">${CURRENCY}${price.toLocaleString('en-IN')}</div>
+          </div>
+        `;
+      });
+      diamondList.innerHTML = listHtml;
+    }
+
+    // Reset form and messages
+    if (form) form.reset();
+    if (successMsg) successMsg.style.display = 'none';
+    if (errorMsg) errorMsg.style.display = 'none';
+
+    // Store diamonds for form submission
+    window._currentInquiryDiamonds = diamonds;
+
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateHeaderWishlistCount() {
+    const wishlist = getWishlist();
+    const count = Object.keys(wishlist).length;
+    const badge = document.querySelector('.wishlist-count-badge');
+    
+    if (badge) {
+      badge.textContent = count;
+      badge.style.display = count > 0 ? 'flex' : 'none';
+    }
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    renderWishlist();
+    updateHeaderWishlistCount();
+    initializeInquiryModal();
+  });
+
+  function initializeInquiryModal() {
+    const modal = document.getElementById('inquiry-modal');
+    const closeBtn = document.getElementById('close-inquiry-modal');
+    const form = document.getElementById('inquiry-form');
+    const submitBtn = document.getElementById('inquiry-submit-btn');
+    const successMsg = document.getElementById('inquiry-success-message');
+    const errorMsg = document.getElementById('inquiry-error-message');
+
+    if (!modal || !form) return;
+
+    // Close modal
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      window._currentInquiryDiamonds = null;
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeModal);
+    }
+
+    // Close on outside click
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const diamonds = window._currentInquiryDiamonds;
+      if (!diamonds || diamonds.length === 0) {
+        alert('No diamonds selected');
+        return;
+      }
+
+      const BACKEND_URL = window.DIAMOND_BACKEND_URL || 'https://rapnet.vercel.app';
+      const formData = new FormData(form);
+
+      // Calculate total value
+      const totalValue = diamonds.reduce(function(sum, d) {
+        return sum + (d.total_sales_price_in_currency || d.total_sales_price || 0);
+      }, 0);
+
+      // Build diamond details for email
+      const diamondDetails = diamonds.map(function(d, i) {
+        const name = [d.lab, (d.size || 'N/A') + ' Carat', d.color + '-' + d.clarity, d.shape].filter(Boolean).join(' ');
+        const price = d.total_sales_price_in_currency || d.total_sales_price || 0;
+        const sku = d.stock_num || d.diamond_id;
+        return {
+          index: i + 1,
+          name: name,
+          sku: sku,
+          shape: d.shape || 'N/A',
+          size: d.size || 'N/A',
+          color: d.color || 'N/A',
+          clarity: d.clarity || 'N/A',
+          cut: d.cut || 'N/A',
+          lab: d.lab || 'N/A',
+          price: price,
+          priceFormatted: CURRENCY + price.toLocaleString('en-IN')
+        };
+      });
+
+      // Prepare inquiry data
+      const inquiryData = {
+        customer: {
+          name: formData.get('name'),
+          email: formData.get('email'),
+          phone: formData.get('phone')
+        },
+        diamonds: diamondDetails,
+        totalValue: totalValue,
+        totalValueFormatted: CURRENCY + totalValue.toLocaleString('en-IN'),
+        message: formData.get('message') || '',
+        isMultiple: diamonds.length > 1
+      };
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+      }
+
+      // Send to backend
+      fetch(BACKEND_URL + '/api/diamonds/send-wishlist-inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inquiryData)
+      })
+      .then(function(res) {
+        if (!res.ok) throw new Error('Failed to send inquiry');
+        return res.json();
+      })
+      .then(function() {
+        // Show success message
+        if (successMsg) {
+          successMsg.textContent = 'Your inquiry has been sent successfully! We\'ll get back to you soon.';
+          successMsg.style.display = 'block';
+        }
+        if (form) form.style.display = 'none';
+
+        // Clear wishlist if it was a bulk inquiry
+        if (diamonds.length > 1) {
+          setTimeout(function() {
+            saveWishlist({});
+            renderWishlist();
+            updateHeaderWishlistCount();
+            closeModal();
+            if (form) {
+              form.style.display = 'block';
+              form.reset();
+            }
+            if (successMsg) successMsg.style.display = 'none';
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Send Inquiry';
+            }
+          }, 3000);
+        } else {
+          setTimeout(function() {
+            closeModal();
+            if (form) {
+              form.style.display = 'block';
+              form.reset();
+            }
+            if (successMsg) successMsg.style.display = 'none';
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Send Inquiry';
+            }
+          }, 2000);
+        }
+      })
+      .catch(function(error) {
+        console.error('Error sending inquiry:', error);
+        if (errorMsg) {
+          errorMsg.textContent = 'Failed to send inquiry. Please try again.';
+          errorMsg.style.display = 'block';
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Inquiry';
+        }
+      });
+    });
+  }
+})();
+</script>

@@ -1,0 +1,930 @@
+{% comment %}
+  Template: page.diamond-product.liquid
+  Diamond product page with add to cart functionality
+  Mimics Existingproduct.liquid structure
+{% endcomment %}
+
+{{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+{{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .diamond-product-page {
+    padding: 36px 0;
+  }
+  @media screen and (min-width: 750px) {
+    .diamond-product-page {
+      padding: 48px 0;
+    }
+  }
+  
+  /* Quantity Selector */
+  .product-form__quantity {
+    margin-bottom: 20px;
+  }
+
+  .quantity__label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .quantity {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    max-width: 150px;
+  }
+
+  .quantity__button {
+    background: transparent;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .quantity__button:hover {
+    background: #f5f5f5;
+  }
+
+  .quantity__input {
+    border: none;
+    text-align: center;
+    width: 60px;
+    padding: 12px 8px;
+    font-size: 14px;
+    font-weight: 500;
+    -moz-appearance: textfield;
+  }
+
+  .quantity__input::-webkit-outer-spin-button,
+  .quantity__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Inquiry Modal Styles */
+  .inquiry-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .inquiry-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .inquiry-modal-content {
+    background-color: #fff;
+    padding: 0;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .inquiry-modal-header {
+    padding: 24px;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .inquiry-modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .inquiry-modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+
+  .inquiry-modal-close:hover {
+    color: #333;
+  }
+
+  .inquiry-modal-body {
+    padding: 24px;
+  }
+
+  .inquiry-form-group {
+    margin-bottom: 20px;
+  }
+
+  .inquiry-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .inquiry-form-group input,
+  .inquiry-form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  .inquiry-form-group input:focus,
+  .inquiry-form-group textarea:focus {
+    outline: none;
+    border-color: #333;
+  }
+
+  .inquiry-form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .inquiry-form-group.required label::after {
+    content: " *";
+    color: #e74c3c;
+  }
+
+  .inquiry-diamond-info {
+    background: #f9f9f9;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .inquiry-diamond-info h3 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .inquiry-diamond-info p {
+    margin: 4px 0;
+    color: #666;
+  }
+
+  .inquiry-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .inquiry-submit-btn:hover {
+    background: #000;
+  }
+
+  .inquiry-submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .inquiry-success-message {
+    display: none;
+    padding: 16px;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  .inquiry-error-message {
+    display: none;
+    padding: 16px;
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Wishlist button - active state */
+  #WishlistButton-diamond.dp-wishlisted {
+    background: #c9a961;
+    border-color: #c9a961;
+    color: #fff;
+  }
+  #WishlistButton-diamond.dp-wishlisted svg {
+    fill: #fff;
+    stroke: #fff;
+  }
+
+  /* Floating wishlist tray */
+  #dp-wishlist-tray {
+    position: fixed;
+    bottom: -90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    transition: bottom 0.3s ease;
+    white-space: nowrap;
+  }
+  #dp-wishlist-tray.visible { bottom: 24px; }
+  .dp-tray-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #0a1428;
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .dp-tray-icon { font-size: 20px; color: #c9a961; }
+  .dp-tray-text { font-size: 14px; font-weight: 500; }
+  .dp-tray-btn {
+    background: #c9a961;
+    color: #0a1428;
+    border: none;
+    border-radius: 50px;
+    padding: 9px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .dp-tray-btn:hover { background: #e0c07a; }
+  .dp-tray-clear {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 2px;
+  }
+  .dp-tray-clear:hover { color: #fff; }
+
+  /* Wishlist items inside inquiry modal */
+  .dp-wishlist-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .dp-wishlist-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+  }
+  .dp-wishlist-list li:last-child { border-bottom: none; }
+  .dp-wl-name { flex: 1; color: #333; }
+  .dp-wl-price { font-weight: 600; color: #111; flex-shrink: 0; }
+  .dp-wl-remove {
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 2px;
+    flex-shrink: 0;
+  }
+  .dp-wl-remove:hover { color: #e74c3c; }
+
+  /* Accordion Styles */
+  .diamond-accordion-item {
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: #fafafa;
+    overflow: hidden;
+  }
+  
+  .diamond-accordion-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    list-style: none;
+    padding: 18px 24px;
+    background: #fafafa;
+    transition: background 0.2s ease;
+  }
+  
+  .diamond-accordion-summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  .diamond-accordion-summary:hover {
+    background: #f5f5f5;
+  }
+  
+  .diamond-accordion-item[open] .diamond-accordion-summary {
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  
+  .diamond-accordion-item .accordion__content {
+    padding: 0;
+    background: #fff;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+</style>
+
+<script>
+  // Configure your backend server URL here
+  window.DIAMOND_BACKEND_URL = 'https://rapnet.vercel.app';
+  // For local testing: window.DIAMOND_BACKEND_URL = 'http://localhost:3000';
+</script>
+<script src="{{ 'diamond-grading-tables.js' | asset_url }}"  defer="defer"></script>
+<script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'diamond-product.js' | asset_url }}" defer="defer"></script>
+<div class="diamond-product-page gradient color-scheme-1">
+  <div class="page-width">
+    <div class="product product--large product--left product--stacked grid grid--1-col grid--2-col-tablet">
+      
+      <!-- Product Media -->
+      <div class="grid__item product__media-wrapper">
+        <div id="diamond-media-container" style="max-width: 500px; margin: 0 auto;">
+          <!-- Image or Video will be inserted here by JavaScript -->
+          <img id="diamond-image" 
+               src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Crect width='500' height='500' fill='%23f5f5f5'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%23999'%3ELoading...%3C/text%3E%3C/svg%3E" 
+               alt="Diamond" 
+               loading="eager"
+               width="500"
+               height="500"
+               style="width: 100%; height: auto; display: block; border-radius: 8px;">
+          <video id="diamond-video" 
+                 controls 
+                 loop 
+                 muted 
+                 playsinline
+                 style="width: 100%; height: auto; display: none; border-radius: 8px;">
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product__info-wrapper grid__item scroll-trigger animate--slide-in">
+        <div class="product__info-container product__column-sticky">
+          
+          <!-- Lab Text -->
+          <p class="product__text inline-richtext caption-with-letter-spacing" id="diamond-lab">
+            Loading...
+          </p>
+
+          <!-- Title -->
+          <div class="product__title">
+            <h1 id="diamond-title">Loading Diamond...</h1>
+          </div>
+
+          <!-- SKU -->
+          <p class="product__sku" role="status" id="diamond-sku">
+            <span class="visually-hidden">SKU:</span>
+            SKU: Loading...
+          </p>
+
+          <!-- Price -->
+          <div id="price-main" role="status">
+            <div class="price price--large">
+              <div class="price__container">
+                <div class="price__regular">
+                  <span class="price-item price-item--regular" id="diamond-price">
+                    Loading...
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+         
+          <!-- Meta Details (Color, Clarity, Cut, Carat) -->
+          <div class="meta-details" id="diamond-meta-details">
+            <!-- Populated by JavaScript -->
+          </div>
+
+          <!-- Product Form -->
+          <div class="product-form" style="margin-top: 20px;">
+            <form id="product-form-diamond" class="form" novalidate="novalidate">
+              <input type="hidden" name="id" id="diamond-variant-id" value="">
+              
+              <div class="product-form__buttons">
+                <!-- Inquiry Button -->
+                <button
+                  type="button"
+                  class="button button--full-width button--primary"
+                  id="InquiryButton-diamond"
+                >
+                  <span>Send Inquiry</span>
+                </button>
+                <!-- Wishlist Button -->
+                <button
+                  type="button"
+                  class="button button--full-width button--secondary"
+                  id="WishlistButton-diamond"
+                  onclick="dpToggleWishlist()"
+                  style="margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px;"
+                >
+                  <svg id="wishlist-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <span id="wishlist-btn-label">Add to Wishlist</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Product Details -->
+          <div class="pro_details" id="diamond-pro-details" style="margin-top: 20px;">
+            <!-- Populated by JavaScript -->
+          </div>
+
+          <!-- Back Link -->
+          <a href="/pages/contact?view=diamond-search" class="link product__view-details animate-arrow" style="margin-top: 20px; display: inline-block;">
+            Back to Search
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Tabs Section -->
+<div class="page-width">
+  <div class="product-taber">
+    <div class="product-tab">
+      <button class="tablinks active" onclick="openCity(event, 'DESCRIPTION')">DESCRIPTION</button>
+      <button class="tablinks" onclick="openCity(event, 'DETAILS')">DETAILS</button>
+      <button class="tablinks" onclick="openCity(event, 'SIZING-GUIDE')">CERTIFICATION</button>
+    </div>
+
+    <div class="product-content">
+      <div id="DESCRIPTION" class="tabcontent" style="display:block;">
+        <div id="diamond-description">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <div id="DETAILS" class="tabcontent">
+        <div class="pc_details" id="diamond-details-table">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <div id="SIZING-GUIDE" class="tabcontent">
+        <div id="diamond-certification">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Related Diamonds Section -->
+<div class="page-width" id="related-diamonds-section" style="margin-top: 60px; display: none;">
+  <h2 class="h3" style="text-align: center; margin-bottom: 30px;">Related Diamonds</h2>
+  <div id="related-diamonds-grid" class="grid product-grid contains-card grid--4-col-desktop grid--2-col-tablet-down">
+    <!-- Populated by JavaScript -->
+  </div>
+</div>
+
+<!-- Inquiry Modal -->
+<div id="inquiry-modal" class="inquiry-modal">
+  <div class="inquiry-modal-content">
+    <div class="inquiry-modal-header">
+      <h2>Send Inquiry</h2>
+      <button class="inquiry-modal-close" id="close-inquiry-modal">&times;</button>
+    </div>
+    <div class="inquiry-modal-body">
+      <div id="inquiry-success-message" class="inquiry-success-message">
+        Your inquiry has been sent successfully! We'll get back to you soon.
+      </div>
+      <div id="inquiry-error-message" class="inquiry-error-message">
+        Failed to send inquiry. Please try again.
+      </div>
+      
+      <div class="inquiry-diamond-info" id="inquiry-diamond-info">
+        <!-- Diamond details will be populated here -->
+      </div>
+
+      <form id="inquiry-form">
+        <div class="inquiry-form-group required">
+          <label for="inquiry-name">Name</label>
+          <input 
+            type="text" 
+            id="inquiry-name" 
+            name="name" 
+            required>
+        </div>
+
+        <div class="inquiry-form-group required">
+          <label for="inquiry-email">Email</label>
+          <input 
+            type="email" 
+            id="inquiry-email" 
+            name="email" 
+            required>
+        </div>
+
+        <div class="inquiry-form-group required">
+          <label for="inquiry-phone">Phone</label>
+          <input 
+            type="tel" 
+            id="inquiry-phone" 
+            name="phone" 
+            required>
+        </div>
+
+        <div class="inquiry-form-group required">
+          <label for="inquiry-quantity">Quantity</label>
+          <div class="price-per-item__container">
+            <quantity-input class="quantity">
+              <button class="quantity__button" name="minus" type="button">
+                <span class="visually-hidden">Decrease quantity</span>
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="icon icon-minus" fill="none" viewBox="0 0 10 2" width="10" height="2">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z" fill="currentColor"></path>
+                </svg>
+              </button>
+              <input
+                class="quantity__input"
+                type="number"
+                name="quantity"
+                id="inquiry-quantity"
+                min="1"
+                value="1"
+                required
+              >
+              <button class="quantity__button" name="plus" type="button">
+                <span class="visually-hidden">Increase quantity</span>
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="icon icon-plus" fill="none" viewBox="0 0 10 10" width="10" height="10">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001 0V5.5l3.5-.01a.5.5 0 000-1H5.5L5.49.99a.5.5 0 00-1 0v3.5l-3.5.01H1z" fill="currentColor"></path>
+                </svg>
+              </button>
+            </quantity-input>
+          </div>
+        </div>
+
+        <div class="inquiry-form-group">
+          <label for="inquiry-message">Message (Optional)</label>
+          <textarea 
+            id="inquiry-message" 
+            name="message" 
+            rows="4"
+            placeholder="Any additional information..."></textarea>
+        </div>
+
+        <button type="submit" class="inquiry-submit-btn" id="inquiry-submit-btn">
+          Send Inquiry
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Wishlist Tray -->
+<div id="dp-wishlist-tray">
+  <div class="dp-tray-inner">
+    <span class="dp-tray-icon">&#9825;</span>
+    <span class="dp-tray-text"><span id="dp-wl-count">0</span> diamond(s) in wishlist</span>
+    <button class="dp-tray-btn" onclick="dpOpenWishlistInquiry()">Send Inquiry</button>
+    <button class="dp-tray-clear" onclick="dpClearWishlist()" title="Clear">&times;</button>
+  </div>
+</div>
+
+<script>
+// Tab functionality
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// ── Wishlist (localStorage, survives page navigation) ──────────────────────
+var DP_WL_KEY = 'dp_diamond_wishlist';
+
+function dpGetWL() {
+  try { return JSON.parse(localStorage.getItem(DP_WL_KEY)) || {}; } catch(e) { return {}; }
+}
+function dpSaveWL(wl) { localStorage.setItem(DP_WL_KEY, JSON.stringify(wl)); }
+
+function dpUpdateTray() {
+  var count = Object.keys(dpGetWL()).length;
+  var tray  = document.getElementById('dp-wishlist-tray');
+  var el    = document.getElementById('dp-wl-count');
+  if (tray) tray.classList.toggle('visible', count > 0);
+  if (el)   el.textContent = count;
+}
+
+function dpSyncBtn() {
+  var diamond = window.currentDiamond;
+  if (!diamond) return;
+  var inList = !!dpGetWL()[diamond.diamond_id];
+  var btn    = document.getElementById('WishlistButton-diamond');
+  var label  = document.getElementById('wishlist-btn-label');
+  var icon   = document.getElementById('wishlist-btn-icon');
+  if (!btn) return;
+  btn.classList.toggle('dp-wishlisted', inList);
+  if (label) label.textContent = inList ? 'Remove from Wishlist' : 'Add to Wishlist';
+  if (icon)  { icon.setAttribute('fill', inList ? 'currentColor' : 'none'); }
+}
+
+window.dpToggleWishlist = function() {
+  var diamond = window.currentDiamond;
+  if (!diamond) return;
+  var wl = dpGetWL();
+  if (wl[diamond.diamond_id]) {
+    delete wl[diamond.diamond_id];
+  } else {
+    wl[diamond.diamond_id] = {
+      diamond_id: diamond.diamond_id,
+      lab:        diamond.lab,
+      size:       diamond.size,
+      color:      diamond.color,
+      clarity:    diamond.clarity,
+      cut:        diamond.cut,
+      shape:      diamond.shape,
+      stock_num:  diamond.stock_num,
+      total_sales_price_in_currency: diamond.total_sales_price_in_currency,
+      total_sales_price:             diamond.total_sales_price,
+      image_file: diamond.image_file
+    };
+  }
+  dpSaveWL(wl);
+  dpSyncBtn();
+  dpUpdateTray();
+  
+  // Trigger header badge update
+  if (window.updateWishlistBadge) {
+    window.updateWishlistBadge();
+  }
+  window.dispatchEvent(new Event('wishlistUpdated'));
+};
+
+window.dpRemoveFromWL = function(id) {
+  var wl = dpGetWL();
+  delete wl[id];
+  dpSaveWL(wl);
+  dpSyncBtn();
+  dpUpdateTray();
+  
+  // Trigger header badge update
+  if (window.updateWishlistBadge) {
+    window.updateWishlistBadge();
+  }
+  window.dispatchEvent(new Event('wishlistUpdated'));
+  
+  dpOpenWishlistInquiry(); // refresh modal list
+};
+
+window.dpClearWishlist = function() {
+  dpSaveWL({});
+  dpSyncBtn();
+  dpUpdateTray();
+  
+  // Trigger header badge update
+  if (window.updateWishlistBadge) {
+    window.updateWishlistBadge();
+  }
+  window.dispatchEvent(new Event('wishlistUpdated'));
+};
+
+window.dpOpenWishlistInquiry = function() {
+  var items = Object.values(dpGetWL());
+  if (!items.length) return;
+
+  // Store items for the submit interceptor
+  window._dpWishlistItems = items;
+
+  // Build diamond list in the info box
+  var infoBox = document.getElementById('inquiry-diamond-info');
+  if (infoBox) {
+    var rows = items.map(function(d) {
+      var name  = [d.lab, d.size ? d.size + ' ct' : '', d.color + '-' + d.clarity, d.shape].filter(Boolean).join(' ');
+      var price = d.total_sales_price_in_currency || d.total_sales_price || 0;
+      return '<li>'
+        + '<span class="dp-wl-name">' + name + '</span>'
+        + '<span class="dp-wl-price">Rs. ' + price.toLocaleString('en-IN') + '</span>'
+        + '<button class="dp-wl-remove" onclick="dpRemoveFromWL(' + d.diamond_id + ')" title="Remove">&times;</button>'
+        + '</li>';
+    }).join('');
+    infoBox.innerHTML = '<h3>Selected Diamonds (' + items.length + ')</h3><ul class="dp-wishlist-list">' + rows + '</ul>';
+  }
+
+  // Reset form first, then pre-fill message
+  var form    = document.getElementById('inquiry-form');
+  var success = document.getElementById('inquiry-success-message');
+  var error   = document.getElementById('inquiry-error-message');
+  if (form)    form.reset();
+  if (success) success.style.display = 'none';
+  if (error)   error.style.display   = 'none';
+
+  var msgField = document.getElementById('inquiry-message');
+  if (msgField) {
+    msgField.value = 'I am interested in the following diamonds:\n\n' + items.map(function(d, i) {
+      var name  = [d.lab, d.size ? d.size + ' ct' : '', d.color + '-' + d.clarity, d.shape].filter(Boolean).join(' ');
+      var price = d.total_sales_price_in_currency || d.total_sales_price || 0;
+      return (i + 1) + '. ' + name + ' — Rs. ' + price.toLocaleString('en-IN');
+    }).join('\n');
+  }
+
+  var modal = document.getElementById('inquiry-modal');
+  if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+};
+
+// Intercept form submit in capture phase — runs before diamond-product.js handler
+// Only takes over when wishlist mode is active (_dpWishlistItems is set)
+document.addEventListener('DOMContentLoaded', function() {
+  dpUpdateTray();
+  
+  // Trigger initial header badge update
+  if (window.updateWishlistBadge) {
+    window.updateWishlistBadge();
+  }
+  
+  var t = setInterval(function() {
+    if (window.currentDiamond) { clearInterval(t); dpSyncBtn(); }
+  }, 150);
+
+  // Check if we should open wishlist inquiry modal automatically
+  var urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('inquiry') === 'wishlist' && sessionStorage.getItem('wishlistInquiry')) {
+    sessionStorage.removeItem('wishlistInquiry');
+    setTimeout(function() {
+      dpOpenWishlistInquiry();
+    }, 500);
+  }
+
+  // Clear wishlist mode when regular Send Inquiry button is clicked
+  var inquiryBtn = document.getElementById('InquiryButton-diamond');
+  if (inquiryBtn) {
+    inquiryBtn.addEventListener('click', function() {
+      window._dpWishlistItems = null;
+    });
+  }
+
+  var form = document.getElementById('inquiry-form');
+  if (!form) return;
+
+  form.addEventListener('submit', function(e) {
+    var items = window._dpWishlistItems;
+    if (!items || !items.length) return; // single diamond — let diamond-product.js handle it
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    var BACKEND_URL = window.DIAMOND_BACKEND_URL || 'https://rapnet.vercel.app';
+    var CURRENCY    = 'Rs.';
+    var formData    = new FormData(form);
+    var submitBtn   = document.getElementById('inquiry-submit-btn');
+    var successMsg  = document.getElementById('inquiry-success-message');
+    var errorMsg    = document.getElementById('inquiry-error-message');
+
+    var totalValue = items.reduce(function(sum, d) {
+      return sum + (d.total_sales_price_in_currency || d.total_sales_price || 0);
+    }, 0);
+
+    var diamondLines = items.map(function(d, i) {
+      var name = [d.lab, (d.size || 'N/A') + ' Carat', d.color + '-' + d.clarity, d.shape].filter(Boolean).join(' ');
+      var price = d.total_sales_price_in_currency || d.total_sales_price || 0;
+      return (i + 1) + '. ' + name + ' (SKU: ' + (d.stock_num || d.diamond_id) + ') — ' + CURRENCY + price.toLocaleString('en-IN');
+    }).join('\n');
+
+    var first = items[0];
+    var inquiryData = {
+      customer: {
+        name:  formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone')
+      },
+      diamond: {
+        id:             'WISHLIST',
+        name:           items.length + ' Diamonds — Wishlist Inquiry',
+        sku:            items.map(function(d){ return d.stock_num || d.diamond_id; }).join(', '),
+        shape:          items.map(function(d){ return d.shape; }).join(', '),
+        size:           items.map(function(d){ return d.size; }).join(', '),
+        color:          items.map(function(d){ return d.color; }).join(', '),
+        clarity:        items.map(function(d){ return d.clarity; }).join(', '),
+        cut:            items.map(function(d){ return d.cut || 'N/A'; }).join(', '),
+        polish:         first.polish   || 'N/A',
+        symmetry:       first.symmetry || 'N/A',
+        lab:            items.map(function(d){ return d.lab; }).join(', '),
+        cert_num:       'See individual diamonds',
+        price:          totalValue,
+        priceFormatted: CURRENCY + totalValue.toLocaleString('en-IN'),
+        image:          null
+      },
+      quantity:            1,
+      totalPrice:          totalValue,
+      totalPriceFormatted: CURRENCY + totalValue.toLocaleString('en-IN'),
+      message:             'SELECTED DIAMONDS:\n' + diamondLines
+        + (formData.get('message') ? '\n\nADDITIONAL NOTE:\n' + formData.get('message') : '')
+    };
+
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
+
+    fetch(BACKEND_URL + '/api/diamonds/send-inquiry', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(inquiryData)
+    })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Failed');
+      return res.json();
+    })
+    .then(function() {
+      // Clear wishlist on success
+      window._dpWishlistItems = null;
+      dpSaveWL({});
+      dpSyncBtn();
+      dpUpdateTray();
+      
+      // Trigger header badge update
+      if (window.updateWishlistBadge) {
+        window.updateWishlistBadge();
+      }
+      window.dispatchEvent(new Event('wishlistUpdated'));
+
+      if (successMsg) { successMsg.textContent = 'Your inquiry has been sent successfully! We\'ll get back to you soon.'; successMsg.style.display = 'block'; }
+      if (form)       form.style.display = 'none';
+
+      setTimeout(function() {
+        var modal = document.getElementById('inquiry-modal');
+        if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; }
+        if (form)  { form.style.display = 'block'; form.reset(); }
+        if (successMsg) successMsg.style.display = 'none';
+        if (submitBtn)  { submitBtn.disabled = false; submitBtn.textContent = 'Send Inquiry'; }
+      }, 3000);
+    })
+    .catch(function() {
+      if (errorMsg)  { errorMsg.textContent = 'Failed to send inquiry. Please try again.'; errorMsg.style.display = 'block'; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send Inquiry'; }
+    });
+  }, true); // capture phase
+});
+</script>

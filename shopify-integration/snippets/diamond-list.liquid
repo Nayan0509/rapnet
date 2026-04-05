@@ -1,0 +1,31 @@
+<div id="diamond-container">Loading diamonds...</div>
+
+<script>
+async function loadDiamondsUI() {
+  document.getElementById("diamond-container").innerText = "Loading...";
+
+  const res = await getDiamonds();
+
+  const list =
+    res?.response?.body?.diamonds || [];
+
+  if (!list.length) {
+    document.getElementById("diamond-container").innerHTML =
+      "No diamonds found.";
+    return;
+  }
+
+  document.getElementById("diamond-container").innerHTML =
+    list.map(d => `
+      <div class="diamond-card" style="border:1px solid #ccc;padding:10px;margin:5px">
+        <h4>${d.shape} - ${d.size}ct</h4>
+        <div>Color: ${d.color}</div>
+        <div>Clarity: ${d.clarity}</div>
+        <div>Lab: ${d.lab}</div>
+        <div>Price: $${d.price_total}</div>
+      </div>
+    `).join("");
+}
+
+loadDiamondsUI();
+</script>

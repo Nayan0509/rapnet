@@ -1,0 +1,530 @@
+/* Diamond Product Detail Styles for Shopify */
+
+.product-single {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+.product-single__media {
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+
+.product-single__photo {
+  width: 100%;
+  background: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.product-single__photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.product-single__photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: #f0f0f0;
+  color: #999;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.product-single__photo-placeholder svg {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 15px;
+}
+
+.product-single__video-preview {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.video-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  transition: background 0.3s;
+}
+
+.product-single__video-preview:hover .video-play-overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.play-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 15px;
+}
+
+.video-play-overlay span {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.product-single__info {
+  padding-top: 20px;
+}
+
+.product-single__vendor {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.product-single__title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  line-height: 1.3;
+  color: #333;
+}
+
+.product-single__sku {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+.product-single__price {
+  margin-bottom: 30px;
+}
+
+.product-price {
+  font-size: 36px;
+  font-weight: 700;
+  color: #05205f;
+}
+
+.product-single__meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 25px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.meta-item {
+  text-align: center;
+}
+
+.meta-label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.meta-value {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.product-form__cart-submit {
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: #05205f;
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: #03163d;
+}
+
+.btn--secondary {
+  background: #fff;
+  color: #05205f;
+  border: 2px solid #05205f;
+}
+
+.btn--secondary:hover {
+  background: #f0f4ff;
+}
+
+.btn--full-width {
+  width: 100%;
+  display: block;
+}
+
+.btn-icon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.product-single__description {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.product-single__description h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.product-specs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.product-specs-table tr {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.product-specs-table tr:last-child {
+  border-bottom: none;
+}
+
+.product-specs-table td {
+  padding: 12px 0;
+  font-size: 15px;
+}
+
+.product-specs-table td:first-child {
+  color: #666;
+  width: 40%;
+}
+
+.product-specs-table td:last-child {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Video Modal */
+.video-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+}
+
+.video-modal-content {
+  background: white;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: hidden;
+}
+
+.video-modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.video-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.video-modal-close {
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  line-height: 1;
+  color: #666;
+}
+
+.video-modal-close:hover {
+  color: #000;
+}
+
+.video-modal-body {
+  padding: 20px;
+}
+
+.video-modal-body video,
+.video-modal-body iframe {
+  width: 100%;
+  max-height: 70vh;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-single {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .product-single__media {
+    position: relative;
+    top: 0;
+  }
+  
+  .product-single__title {
+    font-size: 24px;
+  }
+  
+  .product-price {
+    font-size: 28px;
+  }
+  
+  .product-single__meta {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 20px;
+  }
+  
+  .meta-value {
+    font-size: 18px;
+  }
+  
+  .video-modal-content {
+    max-width: 95%;
+  }
+  
+  .video-modal-header {
+    padding: 15px;
+  }
+  
+  .video-modal-header h3 {
+    font-size: 16px;
+  }
+  
+  .video-modal-body {
+    padding: 15px;
+  }
+}
+/* Certificate Modal */
+.certificate-modal {
+  display: none !important;
+  position: fixed !important;
+  z-index: 999999 !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.certificate-modal.active {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.certificate-modal-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  cursor: pointer !important;
+  z-index: 1 !important;
+}
+
+.certificate-modal-content {
+  position: relative !important;
+  background: white !important;
+  border-radius: 12px !important;
+  width: 90% !important;
+  max-width: 1200px !important;
+  height: 90vh !important;
+  max-height: 900px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+  z-index: 2 !important;
+}
+
+.certificate-modal-header {
+  padding: 20px 30px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  border-radius: 12px 12px 0 0;
+}
+
+.certificate-modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+.certificate-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s;
+  color: #666;
+}
+
+.certificate-modal-close:hover {
+  background: #e0e0e0;
+  color: #000;
+}
+
+.certificate-modal-close svg {
+  width: 24px;
+  height: 24px;
+}
+
+.certificate-modal-body {
+  flex: 1 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.certificate-modal-body iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  display: block !important;
+}
+
+/* Loading state for iframe */
+.certificate-modal-body::before {
+  content: 'Loading certificate...';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #999;
+  font-size: 16px;
+  z-index: -1;
+}
+
+/* Certificate trigger hover effect */
+.certificate-trigger {
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.certificate-trigger:hover {
+  transform: scale(1.05);
+  opacity: 0.8;
+}
+
+.certificate-trigger .meta-detail-value {
+  transition: color 0.2s;
+}
+
+.certificate-trigger:hover .meta-detail-value svg path {
+  fill: #05205f;
+  stroke: #05205f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .certificate-modal-content {
+    width: 95%;
+    height: 85vh;
+    border-radius: 8px;
+  }
+  
+  .certificate-modal-header {
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .certificate-modal-header h2 {
+    font-size: 18px;
+  }
+  
+  .certificate-modal-close svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .certificate-modal-content {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .certificate-modal-header {
+    border-radius: 0;
+  }
+}
+
+/* Diamond Rating Display in Similar Diamonds */
+#related-diamonds-grid .diamond-rating-display {
+  margin: 16px 0 12px 0;
+  padding: 0;
+}
+
+#related-diamonds-grid .card__information {
+  padding: 16px 12px;
+}
+
+#related-diamonds-grid .card__heading {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+#related-diamonds-grid .price-item {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}

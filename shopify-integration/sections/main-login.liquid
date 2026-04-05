@@ -1,0 +1,329 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .custom-login-wrapper {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+  }
+
+  .custom-login-box {
+    width: 100%;
+    max-width: 46rem;
+    background: rgb(var(--color-background));
+    border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+    border-radius: 0.8rem;
+    padding: 4rem 3.2rem;
+    box-shadow: 0 4px 24px rgba(var(--color-foreground), 0.06);
+  }
+
+  .custom-login-box h1 {
+    font-size: 2.4rem;
+    margin: 0 0 0.6rem;
+    text-align: center;
+  }
+
+  .custom-login-box .login-subtitle {
+    text-align: center;
+    color: rgba(var(--color-foreground), 0.6);
+    font-size: 1.4rem;
+    margin-bottom: 3rem;
+  }
+
+  .custom-login-box .field {
+    margin-bottom: 1.6rem;
+    position: relative;
+  }
+
+  .custom-login-box .field label {
+    display: block;
+    font-size: 1.3rem;
+    margin-bottom: 0.6rem;
+    color: rgba(var(--color-foreground), 0.8);
+  }
+
+  .custom-login-box .field input {
+    width: 100%;
+    padding: 1.2rem 1.4rem;
+    border: 0.1rem solid rgba(var(--color-foreground), 0.2);
+    border-radius: 0.4rem;
+    font-size: 1.5rem;
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .custom-login-box .field input:focus {
+    outline: none;
+    border-color: rgb(var(--color-foreground));
+  }
+
+  .custom-login-box .field input[aria-invalid="true"] {
+    border-color: #c0392b;
+  }
+
+  .login-forgot {
+    display: block;
+    text-align: right;
+    font-size: 1.3rem;
+    margin-top: -0.8rem;
+    margin-bottom: 1.6rem;
+    color: rgba(var(--color-foreground), 0.7);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .login-forgot:hover {
+    color: rgb(var(--color-foreground));
+  }
+
+  .custom-login-box .btn-login {
+    width: 100%;
+    padding: 1.4rem;
+    background: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
+    border: none;
+    border-radius: 0.4rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.05rem;
+    transition: opacity 0.2s;
+    margin-top: 0.8rem;
+  }
+
+  .custom-login-box .btn-login:hover {
+    opacity: 0.85;
+  }
+
+  .login-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.4rem 0;
+    color: rgba(var(--color-foreground), 0.4);
+    font-size: 1.3rem;
+  }
+
+  .login-divider::before,
+  .login-divider::after {
+    content: '';
+    flex: 1;
+    height: 0.1rem;
+    background: rgba(var(--color-foreground), 0.12);
+  }
+
+  .login-register-link {
+    text-align: center;
+    font-size: 1.4rem;
+    color: rgba(var(--color-foreground), 0.7);
+  }
+
+  .login-register-link a {
+    color: rgb(var(--color-foreground));
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  .form__message {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.3rem;
+    color: #c0392b;
+    margin-bottom: 1.6rem;
+    padding: 1rem 1.2rem;
+    background: rgba(192, 57, 43, 0.06);
+    border-radius: 0.4rem;
+    border: 0.1rem solid rgba(192, 57, 43, 0.2);
+  }
+
+  /* Recover password panel */
+  .recover-panel {
+    display: none;
+  }
+
+  .recover-panel.active {
+    display: block;
+  }
+
+  .login-panel.hidden {
+    display: none;
+  }
+
+  .recover-back {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.7);
+    cursor: pointer;
+    text-decoration: underline;
+    margin-bottom: 2rem;
+    display: inline-block;
+  }
+
+  .recover-back:hover {
+    color: rgb(var(--color-foreground));
+  }
+
+  .recover-success {
+    color: #27ae60;
+    background: rgba(39, 174, 96, 0.06);
+    border: 0.1rem solid rgba(39, 174, 96, 0.2);
+    border-radius: 0.4rem;
+    padding: 1rem 1.2rem;
+    font-size: 1.3rem;
+    margin-bottom: 1.6rem;
+  }
+</style>
+
+<div class="custom-login-wrapper">
+  <div class="custom-login-box">
+
+    {%- comment -%} ---- LOGIN PANEL ---- {%- endcomment -%}
+    <div class="login-panel" id="login-panel">
+      <h1>Welcome back</h1>
+      <p class="login-subtitle">Sign in to your account</p>
+
+      {%- assign return_to = request.param.return_to | default: '/' -%}
+      {%- form 'customer_login', novalidate: 'novalidate', return_to: return_to -%}
+
+        {%- if form.errors -%}
+          <div class="form__message" role="alert">
+            <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+            {{ form.errors.messages.form | default: 'Invalid email or password.' }}
+          </div>
+        {%- endif -%}
+
+        <div class="field">
+          <label for="CustomerEmail">Email address</label>
+          <input
+            type="email"
+            name="customer[email]"
+            id="CustomerEmail"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            required
+            {% if form.errors contains 'form' %}aria-invalid="true"{% endif %}
+            placeholder="you@example.com"
+            value="{{ form.email }}"
+          >
+        </div>
+
+        <div class="field">
+          <label for="CustomerPhone">Phone number <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
+          <input
+            type="tel"
+            id="CustomerPhone"
+            autocomplete="tel"
+            placeholder="+1 (555) 000-0000"
+          >
+        </div>
+
+        {%- if form.password_needed -%}
+          <div class="field">
+            <label for="CustomerPassword">Password</label>
+            <input
+              type="password"
+              name="customer[password]"
+              id="CustomerPassword"
+              autocomplete="current-password"
+              required
+              {% if form.errors contains 'form' %}aria-invalid="true"{% endif %}
+              placeholder="••••••••"
+            >
+          </div>
+        {%- endif -%}
+
+        <button type="button" class="login-forgot" id="show-recover">Forgot password?</button>
+
+        <button type="submit" class="btn-login">Sign in</button>
+
+      {%- endform -%}
+
+      <div class="login-divider">or</div>
+
+      <p class="login-register-link">
+        Don't have an account? <a href="{{ routes.account_register_url }}">Create one</a>
+      </p>
+    </div>
+
+    {%- comment -%} ---- RECOVER PASSWORD PANEL ---- {%- endcomment -%}
+    <div class="recover-panel" id="recover-panel">
+      <button type="button" class="recover-back" id="hide-recover">← Back to sign in</button>
+      <h1 style="font-size:2rem;margin-bottom:0.6rem;">Reset password</h1>
+      <p class="login-subtitle">We'll send a reset link to your email.</p>
+
+      {%- form 'recover_customer_password' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="recover-success">
+            Check your email — a reset link is on its way.
+          </div>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <div class="form__message" role="alert">
+            <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+            {{ form.errors.messages.form }}
+          </div>
+        {%- endif -%}
+
+        <div class="field">
+          <label for="RecoverEmail">Email address</label>
+          <input
+            type="email"
+            name="email"
+            id="RecoverEmail"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            required
+            {% if form.errors %}aria-invalid="true"{% endif %}
+            placeholder="you@example.com"
+          >
+        </div>
+
+        <button type="submit" class="btn-login">Send reset link</button>
+      {%- endform -%}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function () {
+    var loginPanel  = document.getElementById('login-panel');
+    var recoverPanel = document.getElementById('recover-panel');
+
+    document.getElementById('show-recover').addEventListener('click', function () {
+      loginPanel.classList.add('hidden');
+      recoverPanel.classList.add('active');
+    });
+
+    document.getElementById('hide-recover').addEventListener('click', function () {
+      recoverPanel.classList.remove('active');
+      loginPanel.classList.remove('hidden');
+    });
+
+    // If recover form was just submitted successfully, keep recover panel open
+    {%- if form.posted_successfully? -%}
+    loginPanel.classList.add('hidden');
+    recoverPanel.classList.add('active');
+    {%- endif -%}
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom Login",
+  "settings": []
+}
+{% endschema %}
