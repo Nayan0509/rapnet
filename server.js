@@ -122,6 +122,10 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
 
         const ownerEmail = process.env.OWNER_EMAIL || 'owner@example.com';
         const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
+        const storeUrl = process.env.STORE_URL || 'https://yourstore.com';
+        const brandName = process.env.BRAND_NAME || 'Diamond Store';
+        const brandLogo = process.env.BRAND_LOGO_URL || '';
+        const brandColor = process.env.BRAND_COLOR || '#667eea';
 
         // Owner Email HTML
         const ownerEmailHTML = `
@@ -129,22 +133,28 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
 <html>
 <head>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
-    .content { background: #f9f9f9; padding: 20px; }
-    .section { margin-bottom: 20px; }
-    .section h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5; }
+    .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, ${brandColor} 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    ${brandLogo ? `.brand-logo { max-width: 160px; height: auto; margin-bottom: 15px; }` : ''}
+    .header h1 { margin: 0; font-size: 26px; color: white; }
+    .content { background: #fff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
+    .section { margin-bottom: 25px; }
+    .section h3 { color: ${brandColor}; border-bottom: 2px solid ${brandColor}; padding-bottom: 8px; margin-bottom: 15px; }
     table { width: 100%; border-collapse: collapse; }
-    td { padding: 8px; border-bottom: 1px solid #ddd; }
-    td:first-child { font-weight: bold; width: 40%; }
-    .highlight { background: #fff; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; }
+    td { padding: 10px; border-bottom: 1px solid #f0f0f0; color: #333; }
+    td:first-child { font-weight: 600; width: 40%; color: #666; }
+    .highlight { background: #f8f9fa; padding: 15px; border-left: 4px solid ${brandColor}; margin: 10px 0; color: #333; }
     .diamond-image { max-width: 100%; height: auto; margin-top: 15px; }
+    .diamond-link { color: ${brandColor}; text-decoration: none; font-weight: 600; }
+    .diamond-link:hover { text-decoration: underline; }
+    .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0; border-top: none; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
+      ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
       <h1>🔷 New Diamond Inquiry</h1>
     </div>
     <div class="content">
@@ -152,14 +162,20 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
         <h3>👤 Customer Information</h3>
         <table>
           <tr><td>Name:</td><td>${customer.name}</td></tr>
-          <tr><td>Email:</td><td><a href="mailto:${customer.email}">${customer.email}</a></td></tr>
-          <tr><td>Phone:</td><td><a href="tel:${customer.phone}">${customer.phone}</a></td></tr>
+          <tr><td>Email:</td><td><a href="mailto:${customer.email}" style="color: ${brandColor};">${customer.email}</a></td></tr>
+          <tr><td>Phone:</td><td><a href="tel:${customer.phone}" style="color: ${brandColor};">${customer.phone}</a></td></tr>
         </table>
       </div>
 
       <div class="section">
         <h3>💎 Diamond Details</h3>
+        <p style="margin-bottom: 15px;">
+          <a href="${storeUrl}/pages/diamonds?id=${diamond.id}&view=diamond-product" class="diamond-link" target="_blank">
+            📌 Click here to view diamond on website
+          </a>
+        </p>
         <table>
+          <tr><td>Diamond ID:</td><td><strong>${diamond.id}</strong></td></tr>
           <tr><td>SKU:</td><td>${diamond.sku}</td></tr>
           <tr><td>Name:</td><td>${diamond.name}</td></tr>
           <tr><td>Shape:</td><td>${diamond.shape || 'N/A'}</td></tr>
@@ -169,8 +185,8 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
           <tr><td>Cut:</td><td>${diamond.cut || 'N/A'}</td></tr>
           <tr><td>Polish:</td><td>${diamond.polish || 'N/A'}</td></tr>
           <tr><td>Symmetry:</td><td>${diamond.symmetry || 'N/A'}</td></tr>
-          <tr><td>Lab:</td><td>${diamond.lab || 'N/A'}</td></tr>
-          <tr><td>Certificate:</td><td>${diamond.cert_num || 'N/A'}</td></tr>
+          <tr><td>Lab:</td><td><strong>${diamond.lab || 'N/A'}</strong></td></tr>
+          <tr><td>Certificate #:</td><td><strong>${diamond.cert_num || 'N/A'}</strong></td></tr>
         </table>
       </div>
 
@@ -196,6 +212,12 @@ app.post('/api/diamonds/send-inquiry', async (req, res) => {
         <img src="${diamond.image}" alt="${diamond.name}" class="diamond-image">
       </div>
       ` : ''}
+    </div>
+    <div class="footer">
+      <p style="margin: 0; color: #999; font-size: 12px;">
+        This inquiry was sent from <strong>${brandName}</strong><br>
+        <a href="${storeUrl}" style="color: ${brandColor};">${storeUrl}</a>
+      </p>
     </div>
   </div>
 </body>
@@ -346,23 +368,23 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
         // Build diamond table rows for email
         const diamondRows = diamonds.map(d => `
           <tr style="border-bottom: 1px solid #ddd;">
-            <td style="padding: 12px 8px; font-weight: 600;">${d.index}</td>
+            <td style="padding: 12px 8px; font-weight: 600; color: #333;">${d.index}</td>
             <td style="padding: 12px 8px;">
               <a href="${storeUrl}/pages/diamonds?id=${d.sku}&view=diamond-product" 
-                 style="color: #667eea; text-decoration: none; font-weight: 600;"
+                 style="color: ${brandColor}; text-decoration: none; font-weight: 600;"
                  target="_blank">
                 ${d.name}
               </a>
-              ${d.lab ? `<br><small style="color: #999;">Cert: <strong>${d.lab}</strong></small>` : ''}
+              ${d.lab ? `<br><small style="color: #666;">Lab: <strong style="color: #333;">${d.lab}</strong></small>` : ''}
             </td>
-            <td style="padding: 12px 8px; text-align: center;">
+            <td style="padding: 12px 8px; text-align: center; color: #333;">
               <strong>${d.sku}</strong>
             </td>
-            <td style="padding: 12px 8px; text-align: center;">${d.shape}</td>
-            <td style="padding: 12px 8px; text-align: center;">${d.size}</td>
-            <td style="padding: 12px 8px; text-align: center;">${d.color}</td>
-            <td style="padding: 12px 8px; text-align: center;">${d.clarity}</td>
-            <td style="padding: 12px 8px; text-align: center;">${d.cut}</td>
+            <td style="padding: 12px 8px; text-align: center; color: #333;">${d.shape}</td>
+            <td style="padding: 12px 8px; text-align: center; color: #333;">${d.size}</td>
+            <td style="padding: 12px 8px; text-align: center; color: #333;">${d.color}</td>
+            <td style="padding: 12px 8px; text-align: center; color: #333;">${d.clarity}</td>
+            <td style="padding: 12px 8px; text-align: center; color: #333;">${d.cut}</td>
             <td style="padding: 12px 8px; text-align: right; font-weight: 600; color: #c9a961;">${d.priceFormatted}</td>
           </tr>
         `).join('');
@@ -392,7 +414,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
     .info-table td:first-child { font-weight: 600; width: 150px; color: #666; }
     .diamond-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
     .diamond-table th { background: #f8f9fa; padding: 12px 8px; text-align: left; font-weight: 600; color: #333; border-bottom: 2px solid ${brandColor}; }
-    .diamond-table td { padding: 12px 8px; }
+    .diamond-table td { padding: 12px 8px; color: #333; }
     .total-row { background: #f8f9fa; font-weight: 700; font-size: 16px; }
     .total-row td { padding: 15px 8px; border-top: 3px solid ${brandColor}; }
     .highlight { background: #f8f9fa; padding: 15px; border-left: 4px solid ${brandColor}; margin: 15px 0; border-radius: 4px; }
@@ -405,7 +427,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
   <div class="container">
     <div class="header">
       ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
-      <h1>💎 ${isMultiple ? 'Wishlist' : 'Diamond'} Inquiry Received</h1>
+      <h1>💎 New Diamond Inquiry</h1>
       <p>${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} • Total Value: ${totalValueFormatted}</p>
     </div>
     <div class="content">
@@ -472,14 +494,14 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
 </html>
         `;
 
-        // Customer Email HTML
+        // Customer Email HTML - Diamond table rows
         const customerDiamondRows = diamonds.map(d => `
           <tr style="border-bottom: 1px solid #e0e0e0;">
-            <td style="padding: 12px 8px; font-weight: 600;">${d.index}</td>
-            <td style="padding: 12px 8px;">${d.name}</td>
-            <td style="padding: 12px 8px; text-align: center;">${d.shape}</td>
-            <td style="padding: 12px 8px; text-align: center;">${d.size}</td>
-            <td style="padding: 12px 8px; text-align: center;">${d.color}-${d.clarity}</td>
+            <td style="padding: 12px 8px; font-weight: 600; color: #333;">${d.index}</td>
+            <td style="padding: 12px 8px; color: #333;">${d.name}</td>
+            <td style="padding: 12px 8px; text-align: center; color: #333;">${d.shape}</td>
+            <td style="padding: 12px 8px; text-align: center; color: #333;">${d.size}</td>
+            <td style="padding: 12px 8px; text-align: center; color: #333;">${d.color}-${d.clarity}</td>
             <td style="padding: 12px 8px; text-align: right; font-weight: 600; color: #c9a961;">${d.priceFormatted}</td>
           </tr>
         `).join('');
@@ -498,7 +520,8 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
     .section { margin-bottom: 25px; }
     .section h3 { color: ${brandColor}; border-bottom: 2px solid ${brandColor}; padding-bottom: 8px; margin-bottom: 15px; }
     .diamond-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-    .diamond-table th { background: #f8f9fa; padding: 10px 8px; text-align: left; font-weight: 600; border-bottom: 2px solid ${brandColor}; }
+    .diamond-table th { background: #f8f9fa; padding: 10px 8px; text-align: left; font-weight: 600; color: #333; border-bottom: 2px solid ${brandColor}; }
+    .diamond-table td { color: #333; }
     .total-row { background: #f8f9fa; font-weight: 700; font-size: 15px; }
     .total-row td { padding: 12px 8px; border-top: 2px solid ${brandColor}; }
     .footer { text-align: center; padding: 25px; background: #f8f9fa; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0; border-top: none; }
@@ -509,14 +532,14 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
   <div class="container">
     <div class="header">
       ${brandLogo ? `<img src="${brandLogo}" alt="${brandName}" class="brand-logo">` : ''}
-      <h1>✨ Thank You for Your Inquiry!</h1>
+      <h1>✨ Thank You for Your Inquiry</h1>
     </div>
     <div class="content">
       <p>Dear ${customer.name},</p>
-      <p>Thank you for your interest in our diamonds. We have received your inquiry for <strong>${diamonds.length} diamond${diamonds.length > 1 ? 's' : ''}</strong> and our team will get back to you shortly.</p>
+      <p>Thank you for your interest in our diamond collection. We have received your inquiry for <strong>${diamonds.length} diamond${diamonds.length > 1 ? 's' : ''}</strong> and our team will contact you shortly.</p>
 
       <div class="section">
-        <h3>💎 Your Selected Diamond${diamonds.length > 1 ? 's' : ''} <span class="badge">${diamonds.length} Item${diamonds.length > 1 ? 's' : ''}</span></h3>
+        <h3>💎 Selected Diamond${diamonds.length > 1 ? 's' : ''} <span class="badge">${diamonds.length} Item${diamonds.length > 1 ? 's' : ''}</span></h3>
         <table class="diamond-table">
           <thead>
             <tr>
@@ -538,8 +561,8 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
         </table>
       </div>
 
-      <p style="margin-top: 25px;">We will review your inquiry and contact you within <strong>24 hours</strong>.</p>
-      <p>If you have any urgent questions, please feel free to contact us directly.</p>
+      <p style="margin-top: 25px;">Our diamond specialist will review your inquiry and contact you within <strong>24 hours</strong>.</p>
+      <p>For immediate assistance, please feel free to contact us directly.</p>
     </div>
     <div class="footer">
       <p style="margin: 0; font-size: 16px;"><strong>Best regards,</strong></p>
@@ -562,7 +585,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
                 await emailTransporter.sendMail({
                     from: `"Diamond Inquiry" <${fromEmail}>`,
                     to: ownerEmail,
-                    subject: `💎 ${isMultiple ? 'Wishlist' : 'Diamond'} Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} (${totalValueFormatted})`,
+                    subject: `💎 New Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''} (${totalValueFormatted})`,
                     html: ownerEmailHTML
                 });
                 console.log('Owner wishlist email sent successfully');
@@ -571,7 +594,7 @@ app.post('/api/diamonds/send-wishlist-inquiry', async (req, res) => {
                 await emailTransporter.sendMail({
                     from: `"Diamond Store" <${fromEmail}>`,
                     to: customer.email,
-                    subject: `✨ Your Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''}`,
+                    subject: `✨ Thank You for Your Diamond Inquiry - ${diamonds.length} Diamond${diamonds.length > 1 ? 's' : ''}`,
                     html: customerEmailHTML
                 });
                 console.log('Customer wishlist email sent successfully');
